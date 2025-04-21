@@ -1,5 +1,6 @@
 
 import React from "react";
+import HairStyle4 from "./parts/hair/HairStyle4";
 
 interface HairProps {
   style: number;
@@ -32,6 +33,9 @@ const Hair: React.FC<HairProps> = ({ style, color }) => {
           fill={color}
         />
       );
+    case 4:
+      // New wavy style
+      return <HairStyle4 color={color} />;
     // Default case (0)
     default:
       // Basic short hair
