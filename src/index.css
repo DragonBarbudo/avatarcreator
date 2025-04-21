@@ -112,7 +112,7 @@
 }
 
 .options-row {
-  @apply flex items-center gap-2 overflow-x-auto py-2 px-1 mb-2;
+  @apply grid grid-cols-3 gap-4 p-4;
 }
 
 /* Custom scrollbar styling */

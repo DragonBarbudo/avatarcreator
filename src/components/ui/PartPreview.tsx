@@ -20,8 +20,10 @@ const PartPreview = ({ label, style, color, isSelected, onClick, children }: Par
         isSelected ? "border-primary bg-accent" : "border-border hover:border-primary/50"
       )}
     >
-      <div className="w-20 h-20 flex items-center justify-center bg-secondary/30 rounded-lg">
-        {children}
+      <div className="w-16 h-16 flex items-center justify-center bg-secondary/30 rounded-lg overflow-hidden">
+        <div className="transform scale-75">
+          {children}
+        </div>
       </div>
       <span className="text-sm text-muted-foreground">{label}</span>
     </button>
