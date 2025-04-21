@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -12,7 +11,8 @@ const partIcons: { [key: string]: React.ReactNode } = {
   face: <Icon icon="mingcute:face-fill" width="18" />,
   hair: <Icon icon="mingcute:hair-2-fill" width="18" />,
   eyes: <Icon icon="mingcute:eye-2-fill" width="18" />,
-  mouth: <Icon icon="mingcute:mouth-fill" width="18" />
+  mouth: <Icon icon="mingcute:mouth-fill" width="18" />,
+  shirt: <Icon icon="mingcute:t-shirt-fill" width="18" />
 };
 
 const CharacterCreator: React.FC = () => {
