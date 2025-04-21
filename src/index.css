@@ -131,7 +131,23 @@
 }
 
 .options-row {
-  @apply flex items-center gap-2 overflow-x-auto py-2 px-1 mb-2 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent;
+  @apply flex items-center gap-2 overflow-x-auto py-2 px-1 mb-2;
+}
+
+/* Custom scrollbar styling */
+@layer utilities {
+  .options-row::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  
+  .options-row::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .options-row::-webkit-scrollbar-thumb {
+    @apply bg-secondary rounded-full;
+  }
 }
 
 .option-button {
