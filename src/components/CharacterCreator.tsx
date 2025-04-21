@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Save, Palette, Shirt, Eye, CircleUser, Hair, CircleUserRound } from "lucide-react";
+import { Save, Palette, Shirt, Eye, CircleUser, Frown, CircleUserRound } from "lucide-react";
 import Character from "./character/Character";
 import ColorPicker from "./ui/ColorPicker";
 import StyleSelector from "./ui/StyleSelector";
@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 
 const partIcons = {
   face: CircleUserRound,
-  hair: Hair,
+  hair: Frown,
   eyes: Eye,
   mouth: CircleUser,
   shirt: Shirt,
@@ -23,7 +23,6 @@ const CharacterCreator: React.FC = () => {
   const characterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Listen for messages from parent window
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.type === "loadConfig" && event.data.config) {
         try {
@@ -96,7 +95,6 @@ const CharacterCreator: React.FC = () => {
         imageData: pngDataUrl,
       };
       
-      // Send the configuration to the parent window
       window.parent.postMessage(payload, "*");
       toast.success("Character saved!");
     } catch (error) {
