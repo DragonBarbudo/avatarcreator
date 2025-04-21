@@ -18,6 +18,10 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       className="character-svg"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <Shirt
+        style={config.shirt.style}
+        color={config.shirt.color}
+      />
       <Face
         style={config.face.style}
         color={config.face.color}
@@ -33,10 +37,6 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       <Mouth
         style={config.mouth.style}
         color={config.mouth.color}
-      />
-      <Shirt
-        style={config.shirt.style}
-        color={config.shirt.color}
       />
     </svg>
   );
