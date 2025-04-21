@@ -8,14 +8,12 @@ interface ShirtProps {
 }
 
 const Shirt: React.FC<ShirtProps> = ({ style, color }) => {
-  const pathData = useSvgPath(style, 'shirt');
+  const svgContent = useSvgPath(style, 'shirt');
 
-  if (!pathData) return null;
+  if (!svgContent) return null;
 
   return (
-    <g transform="scale(1) translate(0, 0)">
-      <path d={pathData} fill={color} />
-    </g>
+    <g fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
   );
 };
 
