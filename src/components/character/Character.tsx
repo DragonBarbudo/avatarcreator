@@ -2,10 +2,10 @@
 import React from "react";
 import { CharacterConfig } from "../../types/character";
 import Face from "./parts/face";
-import Hair from "./hair";
-import Eyes from "./eyes";
-import Mouth from "./mouth";
-import Shirt from "./shirt";
+import Hair from "./Hair";
+import Eyes from "./Eyes";
+import Mouth from "./Mouth";
+import Shirt from "./Shirt";
 
 interface CharacterProps {
   config: CharacterConfig;
