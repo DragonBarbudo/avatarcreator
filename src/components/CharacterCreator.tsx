@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Save, Palette, Shirt, Eye, CircleUser, Frown, CircleUserRound } from "lucide-react";
@@ -8,19 +7,20 @@ import StyleSelector from "./ui/StyleSelector";
 import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
 import { characterParts, colorPalettes, defaultConfig } from "../config/characterConfig";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import PartPreview from "./ui/PartPreview";
 
-const partIcons = {
-  face: CircleUserRound,
-  hair: Frown,
-  eyes: Eye,
-  mouth: CircleUser,
-  shirt: Shirt,
-};
+const colorOptions = [
+  "#9b87f5", // Primary Purple
+  "#F97316", // Bright Orange
+  "#0EA5E9", // Ocean Blue
+  "#22C55E", // Green
+  "#EC4899", // Pink
+  "#6B7280", // Gray
+];
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const characterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,10 +28,10 @@ const CharacterCreator: React.FC = () => {
       if (event.data && event.data.type === "loadConfig" && event.data.config) {
         try {
           setConfig(event.data.config);
-          toast.success("Character configuration loaded");
+          toast.success("Configuración cargada");
         } catch (error) {
-          console.error("Failed to load configuration:", error);
-          toast.error("Failed to load configuration");
+          console.error("Error al cargar la configuración:", error);
+          toast.error("Error al cargar la configuración");
         }
       }
     };
@@ -104,78 +104,96 @@ const CharacterCreator: React.FC = () => {
     }
   };
 
-  const toggleColorPicker = () => {
-    setShowColorPicker(!showColorPicker);
+  const renderPartPreviews = () => {
+    const currentPart = activePart;
+    const previews = [];
+    
+    for (let i = 0; i < currentPart.options; i++) {
+      previews.push(
+        <PartPreview
+          key={i}
+          label={`Estilo ${i + 1}`}
+          style={i}
+          color={config[currentPart.id as keyof CharacterConfig].color}
+          isSelected={config[currentPart.id as keyof CharacterConfig].style === i}
+          onClick={() => handleStyleChange(i)}
+        >
+          <div className="w-16 h-16">
+            <Character
+              config={{
+                ...defaultConfig,
+                [currentPart.id]: {
+                  style: i,
+                  color: config[currentPart.id as keyof CharacterConfig].color,
+                },
+              }}
+            />
+          </div>
+        </PartPreview>
+      );
+    }
+    
+    return previews;
   };
 
   return (
-    <Card className="character-creator p-3">
-      <CardHeader className="p-0 space-y-0 mb-2">
-        <div className="text-lg font-semibold text-center">Creador de Personaje</div>
+    <Card className="character-creator w-[480px] p-4">
+      <CardHeader className="p-0 space-y-0 mb-4">
+        <div className="text-xl font-semibold text-center">Tu Avatar</div>
       </CardHeader>
       
-      <CardContent className="p-0 space-y-4">
-        <div className="character-display" ref={characterRef}>
+      <CardContent className="p-0 space-y-6">
+        <div className="character-display bg-secondary/30 rounded-lg p-6" ref={characterRef}>
           <Character config={config} />
         </div>
         
-        <div className="space-y-4">
-          <div className="border-b pb-2">
-            <div className="text-sm font-medium mb-2">Seleccionar Parte</div>
-            <div className="options-row">
-              {characterParts.map((part) => {
-                const IconComponent = partIcons[part.id as keyof typeof partIcons];
-                return (
-                  <button
-                    key={part.id}
-                    className={`option-button ${activePart.id === part.id ? "active" : ""}`}
-                    onClick={() => setActivePart(part)}
-                    title={part.label}
-                  >
-                    <IconComponent className="h-4 w-4" />
-                  </button>
-                );
-              })}
-            </div>
+        <div className="space-y-6">
+          <div className="flex items-center justify-center gap-2 p-2 rounded-lg bg-secondary/30">
+            {characterParts.map((part) => (
+              <button
+                key={part.id}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activePart.id === part.id 
+                    ? "bg-primary text-primary-foreground" 
+                    : "hover:bg-secondary"
+                }`}
+                onClick={() => setActivePart(part)}
+              >
+                {part.label}
+              </button>
+            ))}
           </div>
-          
+
           <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <div className="text-sm font-medium">Estilo de {activePart.label}</div>
-                <StyleSelector
-                  totalStyles={activePart.options}
-                  currentStyle={config[activePart.id as keyof CharacterConfig].style}
-                  onChange={handleStyleChange}
-                />
-              </div>
+            <div className="grid grid-cols-3 gap-4">
+              {renderPartPreviews()}
             </div>
-            
+
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-medium">Color de {activePart.label}</div>
-                <button 
-                  className="option-button"
-                  onClick={toggleColorPicker}
-                  title="Seleccionar color"
-                >
-                  <Palette className="h-4 w-4" />
-                </button>
+              <div className="text-sm font-medium text-muted-foreground mb-2">
+                Seleccionar Color
               </div>
-              {showColorPicker && (
-                <ColorPicker
-                  colors={colorPalettes[activePart.id]}
-                  selectedColor={config[activePart.id as keyof CharacterConfig].color}
-                  onChange={handleColorChange}
-                />
-              )}
+              <div className="flex flex-wrap gap-2">
+                {colorOptions.map((color) => (
+                  <button
+                    key={color}
+                    className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                      config[activePart.id as keyof CharacterConfig].color === color
+                        ? "border-primary ring-2 ring-primary ring-offset-2"
+                        : "border-border"
+                    }`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleColorChange(color)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
         
-        <button className="save-button" onClick={saveCharacter}>
+        <button className="save-button w-full" onClick={saveCharacter}>
           <Save className="h-4 w-4" />
-          Guardar Personaje
+          Guardar Avatar
         </button>
       </CardContent>
     </Card>

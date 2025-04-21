@@ -98,36 +98,17 @@
 
 .character-creator {
   @apply bg-white dark:bg-gray-900 rounded-xl shadow-lg;
-  width: 380px;
-  height: 420px;
-  overflow: hidden;
-  position: relative;
-}
-
-.color-swatch {
-  @apply transition-all duration-200 ease-out shadow-sm hover:scale-110;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.color-swatch.active {
-  @apply ring-2 ring-primary ring-offset-2 scale-110;
+  min-height: 600px;
 }
 
 .character-display {
-  @apply bg-secondary/30 rounded-lg mb-4;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @apply flex items-center justify-center;
+  height: 240px;
 }
 
 .character-svg {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
 }
 
 .options-row {
@@ -159,5 +140,5 @@
 }
 
 .save-button {
-  @apply w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg px-4 py-2.5 transition-colors;
+  @apply flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg px-4 py-2.5 transition-colors;
 }
