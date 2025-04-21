@@ -1,16 +1,11 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Save, UserRound, CircleUserRound, Eye, User, Palette } from "lucide-react";
 import Character from "./character/Character";
 import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
-import { characterParts, defaultConfig } from "../config/characterConfig";
+import { characterParts, defaultConfig, colorPalettes } from "../config/characterConfig";
 import { Card, CardContent } from "./ui/card";
 import PartPreview from "./ui/PartPreview";
-
-const colorOptions = [
-  "#9b87f5", "#F97316", "#0EA5E9", "#22C55E", "#EC4899", "#6B7280",
-];
 
 const partIcons: { [key: string]: React.ReactNode } = {
   face: <UserRound size={18} />,
@@ -137,6 +132,10 @@ const CharacterCreator: React.FC = () => {
     return previews;
   };
 
+  const getCurrentColorPalette = () => {
+    return colorPalettes[activePart.id] || [];
+  };
+
   return (
     <Card className="character-creator w-[380px] h-[420px] overflow-hidden">
       <CardContent className="flex flex-col h-full p-2 gap-2">
@@ -174,7 +173,7 @@ const CharacterCreator: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            {colorOptions.map((color) => (
+            {getCurrentColorPalette().map((color) => (
               <button
                 key={color}
                 className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-110 ${

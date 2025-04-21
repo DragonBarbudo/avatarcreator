@@ -1,4 +1,3 @@
-
 import { CharacterPart, ColorPalette } from "../types/character";
 
 // Define the available parts and how many style options each has
@@ -38,49 +37,44 @@ export const characterParts: CharacterPart[] = [
 // Define color palettes for each part
 export const colorPalettes: ColorPalette = {
   hair: [
+    "#261F1D", // Black
     "#5E4E37", // Brown
-    "#261F1D", // Dark Brown
     "#E8C498", // Blonde
-    "#B7A890", // Light Brown
-    "#A52A2A", // Auburn
+    "#9b87f5", // Purple
+    "#64B5CD", // Cyan
     "#808080", // Gray
-    "#000000", // Black
-    "#E6CEA0", // Golden blonde
   ],
   face: [
-    "#F5D0C2", // Light
-    "#E0B0A0", // Medium
-    "#C09285", // Tan
-    "#A67B68", // Brown
-    "#874C41", // Dark brown
-    "#603A30", // Deep brown
+    "#F5D0C2", // Light skin
+    "#E0B0A0", // Medium skin
+    "#A67B68", // Brown skin
+    "#603A30", // Dark brown skin
+    "#E5DEFF", // Purple skin
+    "#D3E4FD", // Cyan skin
   ],
   eyes: [
     "#3F5787", // Blue
     "#287F59", // Green
     "#694734", // Brown
-    "#000000", // Black
-    "#6F5A46", // Hazel
-    "#867e71", // Gray
     "#9b87f5", // Purple
+    "#64B5CD", // Cyan
+    "#867e71", // Gray
   ],
   mouth: [
-    "#D46A6A", // Light pink
-    "#C25353", // Medium pink
-    "#A83C3C", // Dark pink
+    "#D46A6A", // Pink
+    "#C25353", // Dark pink
     "#8F2424", // Red
+    "#9b87f5", // Purple
+    "#64B5CD", // Cyan
+    "#867e71", // Gray
   ],
   shirt: [
     "#7E69AB", // Purple
     "#4C72B0", // Blue
     "#55A868", // Green
     "#C44E52", // Red
-    "#8172B2", // Lavender
-    "#CCB974", // Yellow
-    "#64B5CD", // Light blue
     "#2A3D4F", // Navy
     "#000000", // Black
-    "#FFFFFF", // White
   ],
 };
 
