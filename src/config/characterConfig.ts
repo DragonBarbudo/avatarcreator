@@ -1,104 +1,26 @@
 
-import { CharacterPart, ColorPalette } from "../types/character";
+import { CharacterConfig, CharacterPart } from "../types/character";
 
-// Define the available parts and how many style options each has
 export const characterParts: CharacterPart[] = [
-  {
-    id: "hair",
-    label: "Hair",
-    options: 9, // Updated to match the number of SVG files
-    defaultColor: "#5E4E37",
-  },
-  {
-    id: "face",
-    label: "Face",
-    options: 3,
-    defaultColor: "#F5D0C2",
-  },
-  {
-    id: "eyes",
-    label: "Eyes",
-    options: 9, // Updated from 4 to 9
-    defaultColor: "#3F5787",
-  },
-  {
-    id: "mouth",
-    label: "Mouth",
-    options: 9, // Updated from 4 to 9
-    defaultColor: "#D46A6A",
-  },
-  {
-    id: "shirt",
-    label: "Shirt",
-    options: 3,
-    defaultColor: "#7E69AB",
-  },
+  { id: "face", label: "Face", options: 7 },
+  { id: "hair", label: "Hair", options: 9 },
+  { id: "eyes", label: "Eyes", options: 4 },
+  { id: "mouth", label: "Mouth", options: 4 },
+  { id: "shirt", label: "Shirt", options: 3 }
 ];
 
-// Define color palettes for each part
-export const colorPalettes: ColorPalette = {
-  hair: [
-    "#261F1D", // Black
-    "#5E4E37", // Brown
-    "#E8C498", // Blonde
-    "#9b87f5", // Purple
-    "#64B5CD", // Cyan
-    "#808080", // Gray
-  ],
-  face: [
-    "#F5D0C2", // Light skin
-    "#E0B0A0", // Medium skin
-    "#A67B68", // Brown skin
-    "#603A30", // Dark brown skin
-    "#E5DEFF", // Purple skin
-    "#D3E4FD", // Cyan skin
-  ],
-  eyes: [
-    "#3F5787", // Blue
-    "#287F59", // Green
-    "#694734", // Brown
-    "#9b87f5", // Purple
-    "#64B5CD", // Cyan
-    "#867e71", // Gray
-  ],
-  mouth: [
-    "#D46A6A", // Pink
-    "#C25353", // Dark pink
-    "#8F2424", // Red
-    "#9b87f5", // Purple
-    "#64B5CD", // Cyan
-    "#867e71", // Gray
-  ],
-  shirt: [
-    "#7E69AB", // Purple
-    "#4C72B0", // Blue
-    "#55A868", // Green
-    "#C44E52", // Red
-    "#2A3D4F", // Navy
-    "#000000", // Black
-  ],
+export const colorPalettes = {
+  face: ["#FADFC9", "#F4C8AB", "#E5B091", "#D49677"],
+  hair: ["#482B79", "#2F1D52", "#1A112E", "#0D0817"],
+  eyes: ["#2F284C", "#1F1B32", "#0F0D19", "#000000"],
+  mouth: ["#3A366F", "#262247", "#131124", "#000000"],
+  shirt: ["#342059", "#673692", "#4D2582", "#281340"]
 };
 
-// Define the default configuration
-export const defaultConfig = {
-  hair: {
-    style: 0,
-    color: "#5E4E37"
-  },
-  face: {
-    style: 0,
-    color: "#F5D0C2"
-  },
-  eyes: {
-    style: 0,
-    color: "#3F5787"
-  },
-  mouth: {
-    style: 0,
-    color: "#D46A6A"
-  },
-  shirt: {
-    style: 0,
-    color: "#7E69AB"
-  }
+export const defaultConfig: CharacterConfig = {
+  face: { style: 0, color: colorPalettes.face[0] },
+  hair: { style: 0, color: colorPalettes.hair[0] },
+  eyes: { style: 0, color: colorPalettes.eyes[0] },
+  mouth: { style: 0, color: colorPalettes.mouth[0] },
+  shirt: { style: 0, color: colorPalettes.shirt[0] }
 };
