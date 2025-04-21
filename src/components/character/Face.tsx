@@ -2,13 +2,13 @@
 import React from 'react';
 import { useSvgPath } from '../../hooks/useSvgPath';
 
-interface HairProps {
+interface FaceProps {
   style: number;
   color: string;
 }
 
-const Hair: React.FC<HairProps> = ({ style, color }) => {
-  const pathData = useSvgPath(style, 'hair');
+const Face: React.FC<FaceProps> = ({ style, color }) => {
+  const pathData = useSvgPath(style, 'face');
 
   if (!pathData) return null;
 
@@ -19,4 +19,4 @@ const Hair: React.FC<HairProps> = ({ style, color }) => {
   );
 };
 
-export default Hair;
+export default Face;

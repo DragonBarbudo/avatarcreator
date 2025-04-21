@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CharacterConfig } from "../../types/character";
-import Face from "./parts/face";
+import Face from "./Face";
 import Hair from "./Hair";
 import Eyes from "./Eyes";
 import Mouth from "./Mouth";
