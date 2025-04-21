@@ -1,6 +1,7 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Save, Face, CircleUserRound, Eye, User, Palette } from "lucide-react";
+import { Save, UserRound, CircleUserRound, Eye, User, Palette } from "lucide-react";
 import Character from "./character/Character";
 import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
 import { characterParts, defaultConfig } from "../config/characterConfig";
@@ -12,7 +13,7 @@ const colorOptions = [
 ];
 
 const partIcons: { [key: string]: React.ReactNode } = {
-  face: <Face size={18} />,
+  face: <UserRound size={18} />,
   hair: <User size={18} />,
   eyes: <Eye size={18} />,
   mouth: <CircleUserRound size={18} />
