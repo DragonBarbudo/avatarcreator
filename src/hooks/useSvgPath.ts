@@ -13,8 +13,28 @@ export const useSvgPath = (style: number, folder: string) => {
         const svgElement = svgDoc.querySelector('svg');
         
         if (svgElement) {
-          svgElement.removeAttribute('viewBox');
-          const innerContent = svgElement.innerHTML;
+          // Keep the viewBox attribute for proper scaling
+          const viewBox = svgElement.getAttribute('viewBox');
+          
+          // Extract defs for clip paths, gradients, etc.
+          const defs = svgElement.querySelector('defs');
+          
+          // Extract the main content
+          let innerContent = svgElement.innerHTML;
+          
+          // If there's no explicit defs but we have clip paths or other references,
+          // we need to make sure they're preserved
+          if (!defs && innerContent.includes('clip-path') && !innerContent.includes('<defs>')) {
+            // Get all clip path elements
+            const clipPaths = Array.from(svgDoc.querySelectorAll('clipPath'));
+            
+            if (clipPaths.length > 0) {
+              // Create a defs element if it doesn't exist
+              const defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
+              innerContent = defsContent + innerContent;
+            }
+          }
+          
           setSvgContent(innerContent.trim());
         }
       } catch (error) {

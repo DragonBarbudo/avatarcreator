@@ -13,7 +13,7 @@ const Eyes: React.FC<EyesProps> = ({ style, color }) => {
   if (!svgContent) return null;
 
   return (
-    <g transform="scale(1) translate(0, 0)" fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
+    <g fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
   );
 };
 
