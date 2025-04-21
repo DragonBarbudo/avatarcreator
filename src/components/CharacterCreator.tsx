@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Save, Palette, Shirt, Eye, CircleUser, Frown, CircleUserRound } from "lucide-react";
@@ -109,6 +110,15 @@ const CharacterCreator: React.FC = () => {
     const previews = [];
     
     for (let i = 0; i < currentPart.options; i++) {
+      // Create a temporary config that only changes the current part style
+      const previewConfig = {
+        ...defaultConfig,
+        [currentPart.id]: {
+          style: i,
+          color: config[currentPart.id as keyof CharacterConfig].color,
+        }
+      };
+      
       previews.push(
         <PartPreview
           key={i}
@@ -118,17 +128,9 @@ const CharacterCreator: React.FC = () => {
           isSelected={config[currentPart.id as keyof CharacterConfig].style === i}
           onClick={() => handleStyleChange(i)}
         >
-          <div className="w-16 h-16">
-            <Character
-              config={{
-                ...defaultConfig,
-                [currentPart.id]: {
-                  style: i,
-                  color: config[currentPart.id as keyof CharacterConfig].color,
-                },
-              }}
-            />
-          </div>
+          <Character
+            config={previewConfig}
+          />
         </PartPreview>
       );
     }

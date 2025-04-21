@@ -21,7 +21,7 @@ const PartPreview = ({ label, style, color, isSelected, onClick, children }: Par
       )}
     >
       <div className="w-16 h-16 flex items-center justify-center bg-secondary/30 rounded-lg overflow-hidden">
-        <div className="transform scale-75">
+        <div className="w-full h-full flex items-center justify-center transform scale-50">
           {children}
         </div>
       </div>
