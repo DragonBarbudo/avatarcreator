@@ -1,3 +1,4 @@
+
 import { CharacterPart, ColorPalette } from "../types/character";
 
 // Define the available parts and how many style options each has
@@ -17,13 +18,13 @@ export const characterParts: CharacterPart[] = [
   {
     id: "eyes",
     label: "Eyes",
-    options: 4,
+    options: 9, // Updated from 4 to 9
     defaultColor: "#3F5787",
   },
   {
     id: "mouth",
     label: "Mouth",
-    options: 4,
+    options: 9, // Updated from 4 to 9
     defaultColor: "#D46A6A",
   },
   {
