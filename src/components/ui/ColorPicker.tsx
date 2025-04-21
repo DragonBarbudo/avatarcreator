@@ -1,6 +1,5 @@
 
 import React from "react";
-import { cn } from "@/lib/utils";
 
 interface ColorPickerProps {
   colors: string[];
@@ -14,14 +13,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex gap-1 flex-wrap">
+    <div className="flex gap-2 flex-wrap">
       {colors.map((color) => (
         <button
           key={color}
-          className={cn(
-            "color-swatch",
-            selectedColor === color && "active"
-          )}
+          className={`color-swatch ${selectedColor === color ? "active" : ""}`}
           style={{ backgroundColor: color }}
           onClick={() => onChange(color)}
           aria-label={`Select color ${color}`}

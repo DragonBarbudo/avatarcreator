@@ -1,6 +1,5 @@
 
 import React from "react";
-import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface StyleSelectorProps {
@@ -33,7 +32,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
       >
         <ArrowLeft className="h-4 w-4" />
       </button>
-      <div className="text-xs text-center min-w-[2rem]">
+      <div className="text-sm font-medium min-w-[3rem] text-center">
         {currentStyle + 1} / {totalStyles}
       </div>
       <button
