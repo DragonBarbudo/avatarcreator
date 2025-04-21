@@ -8,14 +8,12 @@ interface EyesProps {
 }
 
 const Eyes: React.FC<EyesProps> = ({ style, color }) => {
-  const pathData = useSvgPath(style, 'eyes');
+  const svgContent = useSvgPath(style, 'eyes');
 
-  if (!pathData) return null;
+  if (!svgContent) return null;
 
   return (
-    <g transform="scale(1) translate(0, 0)">
-      <path d={pathData} fill={color} />
-    </g>
+    <g transform="scale(1) translate(0, 0)" fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
   );
 };
 

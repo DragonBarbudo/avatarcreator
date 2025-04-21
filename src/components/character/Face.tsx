@@ -8,14 +8,12 @@ interface FaceProps {
 }
 
 const Face: React.FC<FaceProps> = ({ style, color }) => {
-  const pathData = useSvgPath(style, 'face');
+  const svgContent = useSvgPath(style, 'face');
 
-  if (!pathData) return null;
+  if (!svgContent) return null;
 
   return (
-    <g transform="scale(1) translate(0, 0)">
-      <path d={pathData} fill={color} />
-    </g>
+    <g transform="scale(1) translate(0, 0)" fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
   );
 };
 

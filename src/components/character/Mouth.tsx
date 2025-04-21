@@ -8,14 +8,12 @@ interface MouthProps {
 }
 
 const Mouth: React.FC<MouthProps> = ({ style, color }) => {
-  const pathData = useSvgPath(style, 'mouth');
+  const svgContent = useSvgPath(style, 'mouth');
 
-  if (!pathData) return null;
+  if (!svgContent) return null;
 
   return (
-    <g transform="scale(1) translate(0, 0)">
-      <path d={pathData} fill={color} />
-    </g>
+    <g transform="scale(1) translate(0, 0)" fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
   );
 };
 
