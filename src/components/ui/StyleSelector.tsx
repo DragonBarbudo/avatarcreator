@@ -28,7 +28,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
       <button
         className="option-button"
         onClick={handlePrev}
-        aria-label="Previous style"
+        aria-label="Estilo anterior"
       >
         <ArrowLeft className="h-4 w-4" />
       </button>
@@ -38,7 +38,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
       <button
         className="option-button"
         onClick={handleNext}
-        aria-label="Next style"
+        aria-label="Siguiente estilo"
       >
         <ArrowRight className="h-4 w-4" />
       </button>
