@@ -1,4 +1,3 @@
-
 import { CharacterPart, ColorPalette } from "../types/character";
 
 // Define the available parts and how many style options each has
@@ -6,7 +5,7 @@ export const characterParts: CharacterPart[] = [
   {
     id: "hair",
     label: "Hair",
-    options: 5, // Updated to 5 to include styles 0-4
+    options: 9, // Updated to match the number of SVG files
     defaultColor: "#5E4E37",
   },
   {

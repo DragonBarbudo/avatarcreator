@@ -1,6 +1,5 @@
 
-import React from "react";
-import HairStyle4 from "./parts/hair/HairStyle4";
+import React, { useEffect, useState } from "react";
 
 interface HairProps {
   style: number;
@@ -8,44 +7,35 @@ interface HairProps {
 }
 
 const Hair: React.FC<HairProps> = ({ style, color }) => {
-  switch (style) {
-    case 1:
-      // Long wavy hairstyle with intricate details
-      return (
-        <path
-          d="M45.6 0.3C50 -0.1 55.6 0.6 60 2.4C61.2 2.9 62.4 3.9 63.6 4.2C64.9 4.5 66.4 4.3 67.7 4.4C68.3 4.5 68.9 4.5 69.5 4.7C70.1 4.8 70.7 4.9 71.3 5C71.9 5.2 72.5 5.4 73 5.6C73.6 5.7 74.1 5.9 74.7 6.2C75.2 6.4 75.8 6.7 76.3 6.9C76.8 7.2 77.3 7.5 77.8 7.8C78.3 8.1 78.8 8.4 79.2 8.8C79.7 9.1 80.1 9.5 80.6 9.8C81 10.2 81.4 10.5 81.8 10.9C85.1 12.7 87.7 16.3 89.7 20.2C95.9 32.5 100 55.2 98.9 69C98.7 71.1 98.3 73.2 97.8 75.2C96.9 78.3 95.3 81.4 95.5 84.6C95.7 89.7 100 92.3 100.1 93.8L100.2 93.4C100.3 93.7 100.1 93.9 99.9 94.2C97.5 97.6 91.7 99.7 87.8 100.5C82.9 101.5 76.3 101.7 72 98.6C70.8 97.8 69.7 96.7 69.5 95.2C69.1 92.3 72.1 90.2 73.6 88.1C77.7 82.3 79.8 75.2 81 68.2C81.8 63.5 82.7 57.7 81.5 53C80 47.1 75.2 44.6 71.1 40.7C65.5 35.4 62 28.6 60.7 21C60.1 22.5 59.4 23.9 58.5 25.3C48.5 40.6 36.3 37.4 25.7 47.4C23 50.1 20 53.3 18.9 57C16.6 64.9 22.3 79.9 26.5 86.9C27.9 89.3 31 91.9 30.8 94.9C30.7 96.4 29.9 97.7 28.7 98.6C25.7 101.2 21 101.3 17.3 100.9C11.7 100.4 4.8 98.5 1.1 94C2.2 91.5 4.3 89.6 5.3 87.1C7.6 81.4 1.2 75.7 0.8 69.6C-0.5 54.6 9.3 24.4 19 13.1C26.1 4.9 35.4 1.1 45.6 0.3Z"
-          fill={color}
-        />
-      );
-    case 2:
-      // Short flat top
-      return (
-        <path
-          d="M20 40C20 30 30 20 50 20C70 20 80 30 80 40V45C80 45 70 45 60 45C50 45 40 45 30 45C25 45 20 45 20 45V40Z"
-          fill={color}
-        />
-      );
-    case 3:
-      // Curly top
-      return (
-        <path
-          d="M15 50C15 40 15 20 25 15C30 12 40 10 50 10C60 10 70 12 75 15C85 20 85 40 85 50C85 55 80 55 75 53C70 51 65 55 60 53C55 51 50 55 45 53C40 51 35 55 30 53C25 51 20 55 15 50Z"
-          fill={color}
-        />
-      );
-    case 4:
-      // New wavy style
-      return <HairStyle4 color={color} />;
-    // Default case (0)
-    default:
-      // Basic short hair
-      return (
-        <path
-          d="M10 50C10 35 25 15 50 15C75 15 90 35 90 50V55C90 55 75 50 50 50C25 50 10 55 10 55V50Z"
-          fill={color}
-        />
-      );
+  const [svgPath, setSvgPath] = useState<string>("");
+  const totalHairStyles = 9;
+
+  useEffect(() => {
+    const loadHairSVG = async () => {
+      try {
+        // Adjust style number to match file naming (1-9)
+        const styleNumber = ((style % totalHairStyles) + 1);
+        const response = await fetch(`/character-brand/hair/hair${styleNumber}.svg`);
+        const svgText = await response.text();
+        
+        // Extract the path data using regex
+        const pathMatch = svgText.match(/<path\s+d="([^"]+)"/);
+        if (pathMatch && pathMatch[1]) {
+          setSvgPath(pathMatch[1]);
+        }
+      } catch (error) {
+        console.error("Error loading hair SVG:", error);
+      }
+    };
+
+    loadHairSVG();
+  }, [style]);
+
+  if (!svgPath) {
+    return null;
   }
+
+  return <path d={svgPath} fill={color} />;
 };
 
 export default Hair;
