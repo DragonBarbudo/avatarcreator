@@ -1,23 +1,22 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Save, Palette, Shirt, Eye, CircleUser, Frown, CircleUserRound } from "lucide-react";
+import { Save, Face, CircleUserRound, Eye, User, Palette } from "lucide-react";
 import Character from "./character/Character";
-import ColorPicker from "./ui/ColorPicker";
-import StyleSelector from "./ui/StyleSelector";
 import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
-import { characterParts, colorPalettes, defaultConfig } from "../config/characterConfig";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { characterParts, defaultConfig } from "../config/characterConfig";
+import { Card, CardContent } from "./ui/card";
 import PartPreview from "./ui/PartPreview";
 
 const colorOptions = [
-  "#9b87f5", // Primary Purple
-  "#F97316", // Bright Orange
-  "#0EA5E9", // Ocean Blue
-  "#22C55E", // Green
-  "#EC4899", // Pink
-  "#6B7280", // Gray
+  "#9b87f5", "#F97316", "#0EA5E9", "#22C55E", "#EC4899", "#6B7280",
 ];
+
+const partIcons: { [key: string]: React.ReactNode } = {
+  face: <Face size={18} />,
+  hair: <User size={18} />,
+  eyes: <Eye size={18} />,
+  mouth: <CircleUserRound size={18} />
+};
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
@@ -110,7 +109,6 @@ const CharacterCreator: React.FC = () => {
     const previews = [];
     
     for (let i = 0; i < currentPart.options; i++) {
-      // Create a temporary config that only changes the current part style
       const previewConfig = {
         ...defaultConfig,
         [currentPart.id]: {
@@ -139,64 +137,56 @@ const CharacterCreator: React.FC = () => {
   };
 
   return (
-    <Card className="character-creator w-[480px] p-4">
-      <CardHeader className="p-0 space-y-0 mb-4">
-        <div className="text-xl font-semibold text-center">Tu Avatar</div>
-      </CardHeader>
-      
-      <CardContent className="p-0 space-y-6">
-        <div className="character-display bg-secondary/30 rounded-lg p-6" ref={characterRef}>
+    <Card className="character-creator w-[380px] h-[420px] overflow-hidden">
+      <CardContent className="flex flex-col h-full p-2 gap-2">
+        <div className="character-display bg-secondary/30 rounded-lg p-2" ref={characterRef}>
           <Character config={config} />
         </div>
         
-        <div className="space-y-6">
-          <div className="flex items-center justify-center gap-2 p-2 rounded-lg bg-secondary/30">
-            {characterParts.map((part) => (
+        <div className="flex-1 flex gap-2 min-h-0">
+          <div className="flex-1 flex flex-col gap-2 overflow-hidden">
+            <div className="flex items-center justify-center gap-1 p-1 rounded-lg bg-secondary/30">
+              {characterParts.map((part) => (
+                <button
+                  key={part.id}
+                  className={`p-2 rounded-md text-sm transition-colors ${
+                    activePart.id === part.id 
+                      ? "bg-primary text-primary-foreground" 
+                      : "hover:bg-secondary"
+                  }`}
+                  onClick={() => setActivePart(part)}
+                >
+                  {partIcons[part.id]}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-3 gap-2">
+                {renderPartPreviews()}
+              </div>
+            </div>
+
+            <button className="save-button py-1.5" onClick={saveCharacter}>
+              <Save className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            {colorOptions.map((color) => (
               <button
-                key={part.id}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activePart.id === part.id 
-                    ? "bg-primary text-primary-foreground" 
-                    : "hover:bg-secondary"
+                key={color}
+                className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-110 ${
+                  config[activePart.id as keyof CharacterConfig].color === color
+                    ? "border-primary ring-2 ring-primary ring-offset-2"
+                    : "border-border"
                 }`}
-                onClick={() => setActivePart(part)}
-              >
-                {part.label}
-              </button>
+                style={{ backgroundColor: color }}
+                onClick={() => handleColorChange(color)}
+              />
             ))}
           </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              {renderPartPreviews()}
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-sm font-medium text-muted-foreground mb-2">
-                Seleccionar Color
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {colorOptions.map((color) => (
-                  <button
-                    key={color}
-                    className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
-                      config[activePart.id as keyof CharacterConfig].color === color
-                        ? "border-primary ring-2 ring-primary ring-offset-2"
-                        : "border-border"
-                    }`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleColorChange(color)}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
-        
-        <button className="save-button w-full" onClick={saveCharacter}>
-          <Save className="h-4 w-4" />
-          Guardar Avatar
-        </button>
       </CardContent>
     </Card>
   );
