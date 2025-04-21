@@ -1,11 +1,11 @@
 
 import React from "react";
 import { CharacterConfig } from "../../types/character";
-import FaceShape from "./FaceShape";
-import Hair from "./Hair";
-import Eyes from "./Eyes";
-import Mouth from "./Mouth";
-import Shirt from "./Shirt";
+import Face from "./parts/face";
+import Hair from "./hair";
+import Eyes from "./eyes";
+import Mouth from "./mouth";
+import Shirt from "./shirt";
 
 interface CharacterProps {
   config: CharacterConfig;
@@ -18,7 +18,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       className="character-svg"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <FaceShape
+      <Face
         style={config.face.style}
         color={config.face.color}
       />
