@@ -14,7 +14,7 @@ interface CharacterProps {
 const Character: React.FC<CharacterProps> = ({ config }) => {
   return (
     <svg
-      viewBox="0 0 100 150"
+      viewBox="0 0 160 160"
       className="character-svg"
       xmlns="http://www.w3.org/2000/svg"
     >

@@ -13,7 +13,7 @@ const Face: React.FC<FaceProps> = ({ style, color }) => {
   if (!pathData) return null;
 
   return (
-    <g transform="scale(0.4) translate(20, 20)">
+    <g transform="scale(1) translate(0, 0)">
       <path d={pathData} fill={color} />
     </g>
   );

@@ -4,8 +4,8 @@ import { CharacterConfig, CharacterPart } from "../types/character";
 export const characterParts: CharacterPart[] = [
   { id: "face", label: "Face", options: 7 },
   { id: "hair", label: "Hair", options: 9 },
-  { id: "eyes", label: "Eyes", options: 4 },
-  { id: "mouth", label: "Mouth", options: 4 },
+  { id: "eyes", label: "Eyes", options: 9 },
+  { id: "mouth", label: "Mouth", options: 9 },
   { id: "shirt", label: "Shirt", options: 3 }
 ];
 
