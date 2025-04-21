@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -168,7 +169,7 @@ const CharacterCreator: React.FC = () => {
             </div>
 
             <button className="save-button py-1.5" onClick={saveCharacter}>
-              <Save className="h-4 w-4" />
+              <Icon icon="mingcute:save-fill" width="16" />
             </button>
           </div>
 
