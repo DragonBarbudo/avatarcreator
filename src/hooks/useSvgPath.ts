@@ -18,11 +18,8 @@ export const useSvgPath = (style: number, folder: string) => {
           const clipPaths = Array.from(svgDoc.querySelectorAll('clipPath'));
           const defs = svgDoc.querySelector('defs');
           
-          // Get the main content (excluding defs)
-          const mainContent = Array.from(svgElement.childNodes)
-            .filter(node => node.nodeName !== 'defs')
-            .map(node => node.nodeType === Node.ELEMENT_NODE ? (node as Element).outerHTML : node.textContent)
-            .join('');
+          // Get all content from the SVG
+          const allContent = svgElement.innerHTML;
           
           // If we have clip paths but they're not in a defs element, create a defs section
           let defsContent = '';
@@ -31,30 +28,50 @@ export const useSvgPath = (style: number, folder: string) => {
           } else if (defs) {
             defsContent = defs.outerHTML;
           }
+
+          // Handle paths with class attributes
+          let mainContent = allContent;
+          if (!defs) {
+            // If we extracted defs content, we need to remove it from the main content
+            mainContent = mainContent.replace(/<defs>.*?<\/defs>/s, '');
+          }
           
-          // Ensure all elements retain their class attributes, especially for colorable elements
-          let processedContent = mainContent;
+          // Find all elements with class attribute and ensure they're preserved
           const classElements = Array.from(svgElement.querySelectorAll('[class]'));
           classElements.forEach(el => {
             const className = el.getAttribute('class');
-            if (className && !processedContent.includes(`class="${className}"`)) {
-              const elOuterHTML = el.outerHTML;
+            if (className) {
               const elTag = el.tagName.toLowerCase();
               const elId = el.getAttribute('id') || '';
+              const elOuterHTML = el.outerHTML;
               
-              // Pattern to find the element in the content (simplified)
-              const elPattern = new RegExp(`<${elTag}[^>]*?(id="${elId}")?[^>]*?>`, 'g');
-              processedContent = processedContent.replace(elPattern, (match) => {
-                if (!match.includes(`class="${className}"`)) {
-                  return match.replace(/(<${elTag})([^>]*)(>)/, `$1 class="${className}"$2$3`);
-                }
-                return match;
-              });
+              // Make sure the class is properly applied
+              if (elId && !mainContent.includes(`class="${className}"`)) {
+                mainContent = mainContent.replace(
+                  new RegExp(`<${elTag}[^>]*?(id="${elId}").*?>`, 'g'),
+                  match => match.includes(`class="${className}"`) ? match : match.replace(/(<${elTag}[^>]*?)>/, `$1 class="${className}">`)
+                );
+              }
             }
           });
           
-          // Combine defs and processed content
-          setSvgContent((defsContent + processedContent).trim());
+          // Make paths colorable if they don't have a class
+          if (folder === 'mouth') {
+            const paths = Array.from(svgElement.querySelectorAll('path'));
+            paths.forEach(path => {
+              const className = path.getAttribute('class');
+              if (!className && path.getAttribute('fill')) {
+                const pathOuterHTML = path.outerHTML;
+                mainContent = mainContent.replace(
+                  pathOuterHTML,
+                  pathOuterHTML.replace('<path', '<path class="colorable"')
+                );
+              }
+            });
+          }
+
+          // Set final content with defs followed by processed content
+          setSvgContent((defsContent + mainContent).trim());
         }
       } catch (error) {
         console.error(`Error loading ${folder} style ${style}:`, error);

@@ -117,9 +117,11 @@ const CharacterCreator: React.FC = () => {
       const svgData = new XMLSerializer().serializeToString(svgElement);
       const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
       
+      // Create a square canvas with equal width and height
+      const size = 300; // Square size
       const canvas = document.createElement("canvas");
-      canvas.width = 300;
-      canvas.height = 450;
+      canvas.width = size;
+      canvas.height = size;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Could not create canvas context");
 
@@ -131,9 +133,19 @@ const CharacterCreator: React.FC = () => {
         img.onerror = reject;
       });
 
+      // Fill with white background
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Calculate positioning to center the character in the square
+      // SVG viewBox is typically 160x160, so we maintain the aspect ratio
+      const svgSize = 160;
+      const scale = Math.min(size / svgSize, size / svgSize);
+      const offsetX = (size - (svgSize * scale)) / 2;
+      const offsetY = (size - (svgSize * scale)) / 2;
+      
+      // Draw SVG centered in the square canvas
+      ctx.drawImage(img, offsetX, offsetY, svgSize * scale, svgSize * scale);
       
       const pngDataUrl = canvas.toDataURL("image/png");
       
