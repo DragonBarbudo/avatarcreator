@@ -18,60 +18,74 @@ export const useSvgPath = (style: number, folder: string) => {
           const clipPaths = Array.from(svgDoc.querySelectorAll('clipPath'));
           const defs = svgDoc.querySelector('defs');
           
-          // Get all content from the SVG
-          const allContent = svgElement.innerHTML;
+          // Get all direct paths that are not in any group
+          const directPaths = Array.from(svgElement.querySelectorAll(':scope > path'));
           
-          // If we have clip paths but they're not in a defs element, create a defs section
+          // Create defs section if needed
           let defsContent = '';
-          if (clipPaths.length > 0 && !defs) {
-            defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
-          } else if (defs) {
-            defsContent = defs.outerHTML;
-          }
-
-          // Handle paths with class attributes
-          let mainContent = allContent;
-          if (!defs) {
-            // If we extracted defs content, we need to remove it from the main content
-            mainContent = mainContent.replace(/<defs>.*?<\/defs>/s, '');
-          }
-          
-          // Find all elements with class attribute and ensure they're preserved
-          const classElements = Array.from(svgElement.querySelectorAll('[class]'));
-          classElements.forEach(el => {
-            const className = el.getAttribute('class');
-            if (className) {
-              const elTag = el.tagName.toLowerCase();
-              const elId = el.getAttribute('id') || '';
-              const elOuterHTML = el.outerHTML;
-              
-              // Make sure the class is properly applied
-              if (elId && !mainContent.includes(`class="${className}"`)) {
-                mainContent = mainContent.replace(
-                  new RegExp(`<${elTag}[^>]*?(id="${elId}").*?>`, 'g'),
-                  match => match.includes(`class="${className}"`) ? match : match.replace(/(<${elTag}[^>]*?)>/, `$1 class="${className}">`)
-                );
-              }
+          if (clipPaths.length > 0) {
+            if (!defs) {
+              defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
+            } else {
+              defsContent = defs.outerHTML;
             }
-          });
-          
-          // Make paths colorable if they don't have a class
-          if (folder === 'mouth') {
-            const paths = Array.from(svgElement.querySelectorAll('path'));
-            paths.forEach(path => {
-              const className = path.getAttribute('class');
-              if (!className && path.getAttribute('fill')) {
-                const pathOuterHTML = path.outerHTML;
-                mainContent = mainContent.replace(
-                  pathOuterHTML,
-                  pathOuterHTML.replace('<path', '<path class="colorable"')
-                );
-              }
-            });
           }
 
-          // Set final content with defs followed by processed content
-          setSvgContent((defsContent + mainContent).trim());
+          // Create a new content to build our SVG
+          let newContent = defsContent;
+
+          // Handle direct paths (not in groups) - wrap them in a group
+          if (directPaths.length > 0 && folder === 'mouth') {
+            const pathsContent = directPaths.map(path => {
+              let pathHTML = path.outerHTML;
+              // Add colorable class to path if it has a fill and no class
+              if (!path.hasAttribute('class') && path.hasAttribute('fill')) {
+                pathHTML = pathHTML.replace('<path', '<path class="colorable"');
+              }
+              return pathHTML;
+            }).join('');
+            
+            // Wrap direct paths in a group
+            newContent += pathsContent;
+          }
+
+          // Handle existing groups
+          const groups = Array.from(svgElement.querySelectorAll('g'));
+          
+          if (groups.length > 0) {
+            groups.forEach(group => {
+              // Skip groups that are inside defs
+              const parentNode = group.parentNode;
+              if (parentNode && parentNode.nodeName.toLowerCase() === 'defs') {
+                return;
+              }
+              
+              // Make paths in the group colorable if needed
+              const paths = Array.from(group.querySelectorAll('path'));
+              paths.forEach(path => {
+                if (!path.hasAttribute('class') && path.hasAttribute('fill')) {
+                  path.setAttribute('class', 'colorable');
+                }
+              });
+              
+              newContent += group.outerHTML;
+            });
+          } else if (directPaths.length === 0) {
+            // If no groups and no direct paths, just use the inner content
+            const allContent = svgElement.innerHTML;
+            
+            // Remove defs from inner content if we already processed them
+            let mainContent = allContent;
+            if (defs) {
+              mainContent = mainContent.replace(defs.outerHTML, '');
+            }
+            
+            newContent += mainContent;
+          }
+          
+          // Set the final content
+          setSvgContent(newContent.trim());
+          console.log(`Loaded ${folder} style ${style}:`, newContent);
         }
       } catch (error) {
         console.error(`Error loading ${folder} style ${style}:`, error);
