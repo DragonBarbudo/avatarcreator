@@ -34,28 +34,38 @@ export const useSvgPath = (style: number, folder: string) => {
             }
           }
 
-          // Process main content elements
+          // Process main content elements - preserve all paths and their original styling
           let mainContent = '';
           
-          // Process all direct children of the SVG element, including paths, groups, etc.
+          // Process all direct children of the SVG element
           Array.from(svgElement.children).forEach(child => {
             // Skip defs sections as we've already handled them
             if (child.tagName.toLowerCase() === 'defs') return;
             
-            // For path elements, add colorable class if needed
+            // For individual path elements at the top level
             if (child.tagName.toLowerCase() === 'path') {
               const pathElement = child as SVGPathElement;
               if (!pathElement.getAttribute('class') && pathElement.getAttribute('fill')) {
-                pathElement.setAttribute('class', 'colorable');
+                // Only add colorable class if it's not explicitly white/transparent or named color
+                const fill = pathElement.getAttribute('fill')?.toLowerCase();
+                if (fill && fill !== '#ffffff' && fill !== '#fff' && fill !== 'white' && 
+                    fill !== 'none' && fill !== 'transparent' && !fill.includes('url(')) {
+                  pathElement.setAttribute('class', 'colorable');
+                }
               }
             }
             
-            // For group elements, process their paths too
+            // For group elements, selectively add colorable class to paths
             if (child.tagName.toLowerCase() === 'g') {
               const paths = Array.from(child.querySelectorAll('path'));
               paths.forEach(path => {
-                if (!path.getAttribute('class') && path.getAttribute('fill')) {
-                  path.setAttribute('class', 'colorable');
+                if (!path.getAttribute('class')) {
+                  const fill = path.getAttribute('fill')?.toLowerCase();
+                  // Only colorize paths with fill that aren't white/transparent
+                  if (fill && fill !== '#ffffff' && fill !== '#fff' && fill !== 'white' && 
+                      fill !== 'none' && fill !== 'transparent' && !fill.includes('url(')) {
+                    path.setAttribute('class', 'colorable');
+                  }
                 }
               });
             }
