@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,6 +97,21 @@
   }
 }
 
+/* Character styling */
+.character-svg {
+  width: 160px;
+  height: 160px;
+}
+
+.character-hair .colorable,
+.character-eyes .colorable,
+.character-mouth .colorable,
+.character-shirt .colorable,
+.character-face .colorable {
+  fill: var(--part-color);
+}
+
+/* Keep existing styles */
 .character-creator {
   @apply bg-white dark:bg-gray-900 rounded-xl shadow-lg;
 }
@@ -103,11 +119,6 @@
 .character-display {
   @apply flex items-center justify-center;
   height: 180px;
-}
-
-.character-svg {
-  width: 160px;
-  height: 160px;
 }
 
 .options-row {

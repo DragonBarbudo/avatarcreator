@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { useSvgPath } from '../../hooks/useSvgPath';
+import React from "react";
+import { useSvgPath } from "../../hooks/useSvgPath";
 
 interface MouthProps {
   style: number;
@@ -9,11 +9,13 @@ interface MouthProps {
 
 const Mouth: React.FC<MouthProps> = ({ style, color }) => {
   const svgContent = useSvgPath(style, 'mouth');
-
-  if (!svgContent) return null;
-
+  
   return (
-    <g fill={color} dangerouslySetInnerHTML={{ __html: svgContent }} />
+    <g 
+      className="character-mouth"
+      style={{ "--part-color": color } as React.CSSProperties}
+      dangerouslySetInnerHTML={{ __html: svgContent }} 
+    />
   );
 };
 

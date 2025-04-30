@@ -33,17 +33,37 @@ export const useSvgPath = (style: number, folder: string) => {
           const gElements = Array.from(svgElement.querySelectorAll('g'));
           gElements.forEach(g => {
             const clipPath = g.getAttribute('clip-path');
-            if (clipPath) {
-              // Ensure clip-path attributes are preserved
+            const className = g.getAttribute('class');
+            if (clipPath || className) {
+              // Ensure clip-path and class attributes are preserved
               const gId = g.getAttribute('id') || '';
               const gHtml = g.outerHTML;
-              const gInnerHtml = g.innerHTML;
               
-              // Replace the g element in innerContent with proper clip-path attribute
+              // Replace the g element in innerContent with proper attributes
               innerContent = innerContent.replace(
                 new RegExp(`<g[^>]*id="${gId}"[^>]*>.*?</g>`, 's'), 
                 gHtml
               );
+            }
+          });
+          
+          // Preserve class attributes for all elements
+          const elementsWithClass = Array.from(svgElement.querySelectorAll('[class]'));
+          elementsWithClass.forEach(el => {
+            if (el.tagName !== 'g') { // Already handled g elements
+              const className = el.getAttribute('class');
+              const elHtml = el.outerHTML;
+              const elTagName = el.tagName.toLowerCase();
+              
+              // Create a regex that matches this specific element
+              // This is a simplified approach, might need refinement for complex SVGs
+              const elAttributes = Array.from(el.attributes)
+                .filter(attr => attr.name !== 'class') // Exclude class as we're specifically looking for it
+                .map(attr => `${attr.name}="${attr.value}"`)
+                .join(' ');
+                
+              const regexPattern = new RegExp(`<${elTagName}\\s+[^>]*?${elAttributes}[^>]*>`, 'g');
+              innerContent = innerContent.replace(regexPattern, elHtml.substring(0, elHtml.indexOf('>')+1));
             }
           });
           
