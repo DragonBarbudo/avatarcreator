@@ -114,7 +114,26 @@ const CharacterCreator: React.FC = () => {
       const svgElement = characterRef.current.querySelector("svg");
       if (!svgElement) throw new Error("SVG element not found");
 
-      const svgData = new XMLSerializer().serializeToString(svgElement);
+      // Create a deep clone of the SVG to manipulate
+      const clonedSvg = svgElement.cloneNode(true) as SVGElement;
+      
+      // Apply colors directly to SVG elements before export
+      Object.keys(config).forEach(partKey => {
+        const part = partKey as keyof CharacterConfig;
+        const color = config[part].color;
+        
+        // Find the g element for this part and apply color to all paths with colorable class
+        const partGroup = clonedSvg.querySelector(`.character-${part}`);
+        if (partGroup) {
+          const colorablePaths = partGroup.querySelectorAll('path[fill]');
+          colorablePaths.forEach(path => {
+            // Apply color directly to the path
+            (path as SVGPathElement).setAttribute('fill', color);
+          });
+        }
+      });
+
+      const svgData = new XMLSerializer().serializeToString(clonedSvg);
       const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
       
       // Create a square canvas with equal width and height
