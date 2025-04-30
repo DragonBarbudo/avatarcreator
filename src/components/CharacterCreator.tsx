@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -6,6 +7,7 @@ import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/cha
 import { characterParts, defaultConfig, colorPalettes } from "../config/characterConfig";
 import { Card, CardContent } from "./ui/card";
 import PartPreview from "./ui/PartPreview";
+import { Progress } from "./ui/progress";
 
 const partIcons: { [key: string]: React.ReactNode } = {
   face: <Icon icon="mingcute:face-fill" width="18" />,
@@ -18,23 +20,71 @@ const partIcons: { [key: string]: React.ReactNode } = {
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const characterRef = useRef<HTMLDivElement>(null);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.type === "loadConfig" && event.data.config) {
         try {
-          setConfig(event.data.config);
-          toast.success("Configuración cargada");
+          // Start loading state
+          setIsLoading(true);
+          setLoadingProgress(0);
+          
+          // Set up progress animation
+          let progress = 0;
+          loadingTimerRef.current = setInterval(() => {
+            progress += 5;
+            setLoadingProgress(Math.min(progress, 95)); // Cap at 95% until complete
+            
+            if (progress >= 100) {
+              clearInterval(loadingTimerRef.current as NodeJS.Timeout);
+              loadingTimerRef.current = null;
+            }
+          }, 100);
+          
+          // Ensure loading stays visible for at least 2 seconds
+          setTimeout(() => {
+            // Apply the configuration
+            setConfig(event.data.config);
+            
+            // Complete loading after 2 seconds
+            setTimeout(() => {
+              setLoadingProgress(100);
+              setTimeout(() => {
+                setIsLoading(false);
+                toast.success("Configuración cargada");
+              }, 200);
+            }, 100);
+            
+            if (loadingTimerRef.current) {
+              clearInterval(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
+          }, 2000);
+          
         } catch (error) {
           console.error("Error al cargar la configuración:", error);
+          setIsLoading(false);
           toast.error("Error al cargar la configuración");
+          
+          if (loadingTimerRef.current) {
+            clearInterval(loadingTimerRef.current);
+            loadingTimerRef.current = null;
+          }
         }
       }
     };
 
     window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+      if (loadingTimerRef.current) {
+        clearInterval(loadingTimerRef.current);
+      }
+    };
   }, []);
 
   const handleStyleChange = (newStyle: number) => {
@@ -140,7 +190,15 @@ const CharacterCreator: React.FC = () => {
   return (
     <Card className="character-creator w-[380px] h-[420px] overflow-hidden">
       <CardContent className="flex flex-col h-full p-2 gap-2">
-        <div className="character-display bg-secondary/30 rounded-lg p-2" ref={characterRef}>
+        <div className="character-display bg-secondary/30 rounded-lg p-2 relative" ref={characterRef}>
+          {isLoading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 z-10 rounded-lg">
+              <div className="text-primary font-medium mb-2">Loading character...</div>
+              <div className="w-3/4">
+                <Progress value={loadingProgress} className="h-2" />
+              </div>
+            </div>
+          )}
           <Character config={config} />
         </div>
         
@@ -156,6 +214,7 @@ const CharacterCreator: React.FC = () => {
                       : "hover:bg-secondary"
                   }`}
                   onClick={() => setActivePart(part)}
+                  disabled={isLoading}
                 >
                   {partIcons[part.id]}
                 </button>
@@ -168,7 +227,11 @@ const CharacterCreator: React.FC = () => {
               </div>
             </div>
 
-            <button className="save-button py-1.5" onClick={saveCharacter}>
+            <button 
+              className="save-button py-1.5" 
+              onClick={saveCharacter}
+              disabled={isLoading}
+            >
               <Icon icon="mingcute:save-fill" width="16" />
             </button>
           </div>
@@ -184,6 +247,7 @@ const CharacterCreator: React.FC = () => {
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => handleColorChange(color)}
+                disabled={isLoading}
               />
             ))}
           </div>
