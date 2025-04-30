@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -117,20 +116,17 @@ const CharacterCreator: React.FC = () => {
       // Create a deep clone of the SVG to manipulate
       const clonedSvg = svgElement.cloneNode(true) as SVGElement;
       
-      // Apply colors directly to SVG elements before export
+      // Apply colors directly to SVG elements with colorable class before export
       Object.keys(config).forEach(partKey => {
         const part = partKey as keyof CharacterConfig;
         const color = config[part].color;
         
-        // Find the g element for this part and apply color to all paths with colorable class
-        const partGroup = clonedSvg.querySelector(`.character-${part}`);
-        if (partGroup) {
-          const colorablePaths = partGroup.querySelectorAll('path[fill]');
-          colorablePaths.forEach(path => {
-            // Apply color directly to the path
-            (path as SVGPathElement).setAttribute('fill', color);
-          });
-        }
+        // Find only elements with the colorable class in this part and apply color
+        const colorablePaths = clonedSvg.querySelectorAll(`.character-${part} .colorable, .character-${part} path.colorable`);
+        colorablePaths.forEach(path => {
+          // Apply color directly only to colorable elements
+          (path as SVGElement).setAttribute('fill', color);
+        });
       });
 
       const svgData = new XMLSerializer().serializeToString(clonedSvg);
