@@ -34,7 +34,7 @@ export const useSvgPath = (style: number, folder: string) => {
             }
           }
 
-          // Process main content elements - preserve all paths and their original styling
+          // Process main content elements - preserve all paths and their original attributes
           let mainContent = '';
           
           // Process all direct children of the SVG element
