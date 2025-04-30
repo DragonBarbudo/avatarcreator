@@ -1,16 +1,21 @@
 
 import React from "react";
+import { useSvgPath } from "../../hooks/useSvgPath";
 
 interface FaceProps {
   style: number;
   color: string;
 }
 
-const Face: React.FC<FaceProps> = ({ color }) => {
+const Face: React.FC<FaceProps> = ({ style, color }) => {
+  const svgContent = useSvgPath(style, 'face');
+  
   return (
-    <g className="character-face" style={{ "--part-color": color } as React.CSSProperties}>
-      <circle cx="80" cy="80" r="40" className="colorable" />
-    </g>
+    <g 
+      className="character-face"
+      style={{ "--part-color": color } as React.CSSProperties}
+      dangerouslySetInnerHTML={{ __html: svgContent }} 
+    />
   );
 };
 
