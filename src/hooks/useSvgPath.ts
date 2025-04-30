@@ -14,60 +14,47 @@ export const useSvgPath = (style: number, folder: string) => {
         const svgElement = svgDoc.querySelector('svg');
         
         if (svgElement) {
-          // Extract all clip paths from the document
+          // Extract all clip paths and defs from the document
           const clipPaths = Array.from(svgDoc.querySelectorAll('clipPath'));
+          const defs = svgDoc.querySelector('defs');
           
-          // Get the main content
-          let innerContent = svgElement.innerHTML;
+          // Get the main content (excluding defs)
+          const mainContent = Array.from(svgElement.childNodes)
+            .filter(node => node.nodeName !== 'defs')
+            .map(node => node.nodeType === Node.ELEMENT_NODE ? (node as Element).outerHTML : node.textContent)
+            .join('');
           
-          // If we have clip paths but they're not in a defs element, add them
-          if (clipPaths.length > 0 && !innerContent.includes('<defs>')) {
-            const defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
-            // Check if the clipPaths are not already in the innerContent
-            if (!clipPaths.every(cp => innerContent.includes(cp.outerHTML))) {
-              innerContent = defsContent + innerContent;
-            }
+          // If we have clip paths but they're not in a defs element, create a defs section
+          let defsContent = '';
+          if (clipPaths.length > 0 && !defs) {
+            defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
+          } else if (defs) {
+            defsContent = defs.outerHTML;
           }
           
-          // Make sure all g elements retain their attributes
-          const gElements = Array.from(svgElement.querySelectorAll('g'));
-          gElements.forEach(g => {
-            const clipPath = g.getAttribute('clip-path');
-            const className = g.getAttribute('class');
-            if (clipPath || className) {
-              // Ensure clip-path and class attributes are preserved
-              const gId = g.getAttribute('id') || '';
-              const gHtml = g.outerHTML;
+          // Ensure all elements retain their class attributes, especially for colorable elements
+          let processedContent = mainContent;
+          const classElements = Array.from(svgElement.querySelectorAll('[class]'));
+          classElements.forEach(el => {
+            const className = el.getAttribute('class');
+            if (className && !processedContent.includes(`class="${className}"`)) {
+              const elOuterHTML = el.outerHTML;
+              const elTag = el.tagName.toLowerCase();
+              const elId = el.getAttribute('id') || '';
               
-              // Replace the g element in innerContent with proper attributes
-              innerContent = innerContent.replace(
-                new RegExp(`<g[^>]*id="${gId}"[^>]*>.*?</g>`, 's'), 
-                gHtml
-              );
+              // Pattern to find the element in the content (simplified)
+              const elPattern = new RegExp(`<${elTag}[^>]*?(id="${elId}")?[^>]*?>`, 'g');
+              processedContent = processedContent.replace(elPattern, (match) => {
+                if (!match.includes(`class="${className}"`)) {
+                  return match.replace(/(<${elTag})([^>]*)(>)/, `$1 class="${className}"$2$3`);
+                }
+                return match;
+              });
             }
           });
           
-          // Preserve class attributes for all elements
-          const elementsWithClass = Array.from(svgElement.querySelectorAll('[class]'));
-          elementsWithClass.forEach(el => {
-            if (el.tagName !== 'g') { // Already handled g elements
-              const className = el.getAttribute('class');
-              const elHtml = el.outerHTML;
-              const elTagName = el.tagName.toLowerCase();
-              
-              // Create a regex that matches this specific element
-              // This is a simplified approach, might need refinement for complex SVGs
-              const elAttributes = Array.from(el.attributes)
-                .filter(attr => attr.name !== 'class') // Exclude class as we're specifically looking for it
-                .map(attr => `${attr.name}="${attr.value}"`)
-                .join(' ');
-                
-              const regexPattern = new RegExp(`<${elTagName}\\s+[^>]*?${elAttributes}[^>]*>`, 'g');
-              innerContent = innerContent.replace(regexPattern, elHtml.substring(0, elHtml.indexOf('>')+1));
-            }
-          });
-          
-          setSvgContent(innerContent.trim());
+          // Combine defs and processed content
+          setSvgContent((defsContent + processedContent).trim());
         }
       } catch (error) {
         console.error(`Error loading ${folder} style ${style}:`, error);
