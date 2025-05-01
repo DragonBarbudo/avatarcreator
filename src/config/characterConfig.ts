@@ -12,9 +12,9 @@ export const characterParts: CharacterPart[] = [
 export const colorPalettes = {
   face: ["#FADFC9", "#F4C8AB", "#E5B091", "#D49677"],
   hair: ["#4d1aa8", "#03bdea", "#ef7e7e", "#0D0817", "#8a5648", "#dcbe90"],
-  eyes: ["#2F284C", "#1F1B32", "#0F0D19", "#000000"],
-  mouth: ["#3A366F", "#262247", "#131124", "#000000"],
-  shirt: ["#342059", "#673692", "#4D2582", "#281340"]
+  eyes: ["#3b0e61", "#13387f", "#343537", "#49041b", "#553110"],
+  mouth: ["#4d1aa8", "#03bdea", "#ef7e7e"],
+  shirt: ["#4d1aa8", "#03bdea", "#ef7e7e"]
 };
 
 export const defaultConfig: CharacterConfig = {
