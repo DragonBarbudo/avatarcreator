@@ -7,7 +7,7 @@ export const useSvgPath = (style: number, folder: string) => {
   useEffect(() => {
     const loadSvg = async () => {
       try {
-        const response = await fetch(`/character-brand/${folder}/${folder}${style + 1}.svg`);
+        const response = await fetch(`${import.meta.env.BASE_URL}character-brand/${folder}/${folder}${style + 1}.svg`);
         if (!response.ok) {
           console.error(`Failed to load ${folder}${style + 1}.svg: ${response.status}`);
           return;
