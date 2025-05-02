@@ -1,20 +1,14 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
-import Character from "./character/Character";
 import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
 import { characterParts, defaultConfig, colorPalettes } from "../config/characterConfig";
 import { Card, CardContent } from "./ui/card";
 import PartPreview from "./ui/PartPreview";
-import { Progress } from "./ui/progress";
-
-const partIcons: { [key: string]: React.ReactNode } = {
-  face: <Icon icon="mingcute:face-fill" width="18" />,
-  hair: <Icon icon="mingcute:hair-2-fill" width="18" />,
-  eyes: <Icon icon="mingcute:eye-2-fill" width="18" />,
-  mouth: <Icon icon="mingcute:mouth-fill" width="18" />,
-  shirt: <Icon icon="mingcute:t-shirt-fill" width="18" />
-};
+import CharacterPreview from "./character/CharacterPreview";
+import PartSelector from "./character/PartSelector";
+import ColorPalette from "./character/ColorPalette";
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
@@ -200,9 +194,7 @@ const CharacterCreator: React.FC = () => {
           isSelected={config[currentPart.id as keyof CharacterConfig].style === i}
           onClick={() => handleStyleChange(i)}
         >
-          <Character
-            config={previewConfig}
-          />
+          <Character config={previewConfig} />
         </PartPreview>
       );
     }
@@ -218,35 +210,21 @@ const CharacterCreator: React.FC = () => {
     <Card className="character-creator w-[380px] h-[420px] overflow-hidden">
       <CardContent className="flex flex-col h-full p-2 gap-2">
         <div className="character-display bg-secondary/30 rounded-lg p-2 relative" ref={characterRef}>
-          {isLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 z-10 rounded-lg">
-              <div className="text-primary font-medium mb-2">Loading character...</div>
-              <div className="w-3/4">
-                <Progress value={loadingProgress} className="h-2" />
-              </div>
-            </div>
-          )}
-          <Character config={config} />
+          <CharacterPreview 
+            config={config} 
+            isLoading={isLoading} 
+            loadingProgress={loadingProgress}
+          />
         </div>
         
         <div className="flex-1 flex gap-2 min-h-0">
           <div className="flex-1 flex flex-col gap-2 overflow-hidden">
-            <div className="flex items-center justify-center gap-1 p-1 rounded-lg bg-secondary/30">
-              {characterParts.map((part) => (
-                <button
-                  key={part.id}
-                  className={`p-2 rounded-md text-sm transition-colors ${
-                    activePart.id === part.id 
-                      ? "bg-primary text-primary-foreground" 
-                      : "hover:bg-secondary"
-                  }`}
-                  onClick={() => setActivePart(part)}
-                  disabled={isLoading}
-                >
-                  {partIcons[part.id]}
-                </button>
-              ))}
-            </div>
+            <PartSelector 
+              characterParts={characterParts} 
+              activePart={activePart} 
+              setActivePart={setActivePart}
+              isLoading={isLoading}
+            />
 
             <div className="flex-1 overflow-y-auto">
               <div className="grid grid-cols-3 gap-2">
@@ -263,21 +241,12 @@ const CharacterCreator: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            {getCurrentColorPalette().map((color) => (
-              <button
-                key={color}
-                className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-110 ${
-                  config[activePart.id as keyof CharacterConfig].color === color
-                    ? "border-primary ring-2 ring-primary ring-offset-2"
-                    : "border-border"
-                }`}
-                style={{ backgroundColor: color }}
-                onClick={() => handleColorChange(color)}
-                disabled={isLoading}
-              />
-            ))}
-          </div>
+          <ColorPalette 
+            colors={getCurrentColorPalette()}
+            selectedColor={config[activePart.id as keyof CharacterConfig].color}
+            onColorChange={handleColorChange}
+            isLoading={isLoading}
+          />
         </div>
       </CardContent>
     </Card>
