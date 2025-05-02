@@ -9,7 +9,7 @@ import PartPreview from "./ui/PartPreview";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
-import Character from "./character/Character"; // Add this import
+import Character from "./character/Character";
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
@@ -119,7 +119,6 @@ const CharacterCreator: React.FC = () => {
         // Find only elements with the colorable class in this part and apply color
         const colorablePaths = clonedSvg.querySelectorAll(`.character-${part} .colorable, .character-${part} path.colorable`);
         colorablePaths.forEach(path => {
-          // Apply color directly only to colorable elements
           (path as SVGElement).setAttribute('fill', color);
         });
       });
@@ -128,7 +127,7 @@ const CharacterCreator: React.FC = () => {
       const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
       
       // Create a square canvas with equal width and height
-      const size = 300; // Square size
+      const size = 300;
       const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
@@ -148,7 +147,6 @@ const CharacterCreator: React.FC = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Calculate positioning to center the character in the square
-      // SVG viewBox is typically 160x160, so we maintain the aspect ratio
       const svgSize = 160;
       const scale = Math.min(size / svgSize, size / svgSize);
       const offsetX = (size - (svgSize * scale)) / 2;

@@ -50,7 +50,6 @@ export const useSvgPath = (style: number, folder: string) => {
           const finalContent = defsContent + mainContent;
           
           setSvgContent(finalContent.trim());
-          console.log(`Loaded ${folder} style ${style}:`, finalContent);
         }
       } catch (error) {
         console.error(`Error loading ${folder} style ${style}:`, error);
