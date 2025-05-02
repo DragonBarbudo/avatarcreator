@@ -2,21 +2,22 @@
 import React from "react";
 import { useSvgPath } from "../../hooks/useSvgPath";
 
-interface HairProps {
+interface CharacterPartProps {
+  type: string;
   style: number;
   color: string;
 }
 
-const Hair: React.FC<HairProps> = ({ style, color }) => {
-  const svgContent = useSvgPath(style, 'hair');
+const CharacterPart: React.FC<CharacterPartProps> = ({ type, style, color }) => {
+  const svgContent = useSvgPath(style, type);
   
   return (
     <g 
-      className="character-hair"
+      className={`character-${type}`}
       style={{ "--part-color": color } as React.CSSProperties}
       dangerouslySetInnerHTML={{ __html: svgContent }} 
     />
   );
 };
 
-export default Hair;
+export default CharacterPart;

@@ -24,32 +24,23 @@ export const useSvgPath = (style: number, folder: string) => {
           const defs = svgDoc.querySelector('defs');
           
           if (defs) {
-            // Use existing defs section
             defsContent = defs.outerHTML;
           } else {
-            // Check for clipPath elements that might be outside a defs section
             const clipPaths = Array.from(svgDoc.querySelectorAll('clipPath'));
             if (clipPaths.length > 0) {
               defsContent = `<defs>${clipPaths.map(cp => cp.outerHTML).join('')}</defs>`;
             }
           }
 
-          // Process main content elements - preserve all paths and their original attributes
+          // Process main content elements
           let mainContent = '';
           
-          // Process all direct children of the SVG element
           Array.from(svgElement.children).forEach(child => {
-            // Skip defs sections as we've already handled them
             if (child.tagName.toLowerCase() === 'defs') return;
-            
-            // Add the child element as-is, preserving all original attributes
             mainContent += child.outerHTML;
           });
           
-          // Combine defs and main content
-          const finalContent = defsContent + mainContent;
-          
-          setSvgContent(finalContent.trim());
+          setSvgContent((defsContent + mainContent).trim());
         }
       } catch (error) {
         console.error(`Error loading ${folder} style ${style}:`, error);

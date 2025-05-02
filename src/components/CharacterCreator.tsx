@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -108,15 +107,12 @@ const CharacterCreator: React.FC = () => {
       const svgElement = characterRef.current.querySelector("svg");
       if (!svgElement) throw new Error("SVG element not found");
 
-      // Create a deep clone of the SVG to manipulate
       const clonedSvg = svgElement.cloneNode(true) as SVGElement;
       
-      // Apply colors directly to SVG elements with colorable class before export
       Object.keys(config).forEach(partKey => {
         const part = partKey as keyof CharacterConfig;
         const color = config[part].color;
         
-        // Find only elements with the colorable class in this part and apply color
         const colorablePaths = clonedSvg.querySelectorAll(`.character-${part} .colorable, .character-${part} path.colorable`);
         colorablePaths.forEach(path => {
           (path as SVGElement).setAttribute('fill', color);
@@ -126,7 +122,6 @@ const CharacterCreator: React.FC = () => {
       const svgData = new XMLSerializer().serializeToString(clonedSvg);
       const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
       
-      // Create a square canvas with equal width and height
       const size = 300;
       const canvas = document.createElement("canvas");
       canvas.width = size;
@@ -142,17 +137,14 @@ const CharacterCreator: React.FC = () => {
         img.onerror = reject;
       });
 
-      // Fill with white background
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Calculate positioning to center the character in the square
       const svgSize = 160;
       const scale = Math.min(size / svgSize, size / svgSize);
       const offsetX = (size - (svgSize * scale)) / 2;
       const offsetY = (size - (svgSize * scale)) / 2;
       
-      // Draw SVG centered in the square canvas
       ctx.drawImage(img, offsetX, offsetY, svgSize * scale, svgSize * scale);
       
       const pngDataUrl = canvas.toDataURL("image/png");
