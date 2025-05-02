@@ -9,6 +9,7 @@ import PartPreview from "./ui/PartPreview";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
+import Character from "./character/Character"; // Add this import
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
