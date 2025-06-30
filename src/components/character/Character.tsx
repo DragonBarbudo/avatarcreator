@@ -81,18 +81,42 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
       (element as SVGElement).style.display = 'none';
     });
 
-    // Show selected elements based on config - using direct ID construction
+    // Show selected elements based on config - using discovered elements array
     const elementsToShow: string[] = [];
 
-    // Construct element IDs based on config (config uses 0-based, SVG uses 1-based)
-    elementsToShow.push(`eyes-${config.eyes.style + 1}`);
-    elementsToShow.push(`fhair-${config.hair.frontStyle + 1}`);
-    elementsToShow.push(`bhair-${config.hair.frontStyle + 1}`); // Match back hair to front hair
-    elementsToShow.push(`brows-${config.brows.style + 1}`);
-    elementsToShow.push(`nose-${config.nose.style + 1}`);
-    elementsToShow.push(`mouth-${config.mouth.style + 1}`);
-    elementsToShow.push(`face-${config.face.style + 1}`);
-    elementsToShow.push(`shirt-${config.shirt.style + 1}`);
+    // Map config indices to actual available elements
+    if (discovered.eyes[config.eyes.style]) {
+      elementsToShow.push(discovered.eyes[config.eyes.style]);
+    }
+    
+    if (discovered.fhair[config.hair.frontStyle]) {
+      elementsToShow.push(discovered.fhair[config.hair.frontStyle]);
+    }
+    
+    // For back hair, try to match the front hair style if available
+    if (discovered.bhair[config.hair.frontStyle]) {
+      elementsToShow.push(discovered.bhair[config.hair.frontStyle]);
+    }
+    
+    if (discovered.brows[config.brows.style]) {
+      elementsToShow.push(discovered.brows[config.brows.style]);
+    }
+    
+    if (discovered.nose[config.nose.style]) {
+      elementsToShow.push(discovered.nose[config.nose.style]);
+    }
+    
+    if (discovered.mouth[config.mouth.style]) {
+      elementsToShow.push(discovered.mouth[config.mouth.style]);
+    }
+    
+    if (discovered.face[config.face.style]) {
+      elementsToShow.push(discovered.face[config.face.style]);
+    }
+    
+    if (discovered.shirt[config.shirt.style]) {
+      elementsToShow.push(discovered.shirt[config.shirt.style]);
+    }
 
     console.log('Showing elements:', elementsToShow);
     const actuallyShown: string[] = [];
