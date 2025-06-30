@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
 
@@ -10,6 +10,7 @@ interface CharacterProps {
 const Character: React.FC<CharacterProps> = ({ config }) => {
   const { svgContent, isLoading } = useAvatarSvg();
   const svgRef = useRef<HTMLDivElement>(null);
+  const [activeElements, setActiveElements] = useState<string[]>([]);
 
   useEffect(() => {
     if (!svgContent || !svgRef.current) return;
@@ -59,11 +60,14 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
 
     console.log('Showing elements:', elementsToShow);
 
+    const actuallyShown: string[] = [];
+
     // Show only the selected elements
     elementsToShow.forEach(elementId => {
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
         (element as SVGElement).style.display = 'block';
+        actuallyShown.push(elementId);
         
         // Apply colors to colorable elements
         const partType = elementId.split('-')[0];
@@ -104,6 +108,9 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       }
     });
 
+    // Update the active elements state for debugging
+    setActiveElements(actuallyShown);
+
     // Clear previous content and add new SVG
     svgRef.current.innerHTML = '';
     svgRef.current.appendChild(clonedSvg);
@@ -117,7 +124,23 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     );
   }
 
-  return <div ref={svgRef} className="character-display" />;
+  return (
+    <div>
+      <div ref={svgRef} className="character-display" />
+      <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+        <div className="font-semibold mb-1">Active Elements:</div>
+        <div className="space-y-1">
+          {activeElements.length > 0 ? (
+            activeElements.map((element, index) => (
+              <div key={index} className="text-gray-700">{element}</div>
+            ))
+          ) : (
+            <div className="text-gray-500">No active elements found</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Character;
