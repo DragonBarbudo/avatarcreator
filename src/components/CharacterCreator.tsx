@@ -156,10 +156,10 @@ const CharacterCreator: React.FC = () => {
       };
       
       window.parent.postMessage(payload, "*");
-      toast.success("Character saved!");
+      toast.success("¡Avatar actualizado!");
     } catch (error) {
       console.error("Error saving character:", error);
-      toast.error("Failed to save character");
+      toast.error("Error al guardar avatar. Intenta de nuevo.");
     }
   };
 
@@ -176,6 +176,12 @@ const CharacterCreator: React.FC = () => {
         }
       };
       
+      previewConfig.shirt.color = config.shirt.color
+      previewConfig.face.color = config.face.color
+      previewConfig.hair.color = config.hair.color
+      previewConfig.eyes.color = config.eyes.color
+      previewConfig.mouth.color = config.mouth.color
+      
       previews.push(
         <PartPreview
           key={i}
@@ -186,6 +192,7 @@ const CharacterCreator: React.FC = () => {
           onClick={() => handleStyleChange(i)}
         >
           <Character config={previewConfig} />
+
         </PartPreview>
       );
     }
@@ -198,7 +205,7 @@ const CharacterCreator: React.FC = () => {
   };
 
   return (
-    <Card className="character-creator w-[380px] h-[420px] overflow-hidden">
+    <Card className="character-creator w-[380px] h-[520px] overflow-hidden relative">
       <CardContent className="flex flex-col h-full p-2 gap-2">
         <div className="character-display bg-secondary/30 rounded-lg p-2 relative" ref={characterRef}>
           <CharacterPreview 
@@ -207,8 +214,8 @@ const CharacterCreator: React.FC = () => {
             loadingProgress={loadingProgress}
           />
         </div>
-        
-        <div className="flex-1 flex gap-2 min-h-0">
+
+        <div className="flex-1 flex gap-2 min-h-0 ">
           <div className="flex-1 flex flex-col gap-2 overflow-hidden">
             <PartSelector 
               characterParts={characterParts} 
@@ -216,28 +223,27 @@ const CharacterCreator: React.FC = () => {
               setActivePart={setActivePart}
               isLoading={isLoading}
             />
+             <ColorPalette 
+              colors={getCurrentColorPalette()}
+              selectedColor={config[activePart.id as keyof CharacterConfig].color}
+              onColorChange={handleColorChange}
+              isLoading={isLoading}
+            />
 
             <div className="flex-1 overflow-y-auto">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-4 gap-0.5">
                 {renderPartPreviews()}
               </div>
             </div>
 
-            <button 
-              className="save-button py-1.5" 
-              onClick={saveCharacter}
-              disabled={isLoading}
-            >
-              <Icon icon="mingcute:save-fill" width="16" />
-            </button>
+            <button onClick={saveCharacter}
+              disabled={isLoading} className="absolute top-2 right-2 save-button ">
+                <Icon icon="mingcute:check-2-fill" width="16" />
+                <span className="text-xs">Guardar</span>
+              </button>
+            
           </div>
-
-          <ColorPalette 
-            colors={getCurrentColorPalette()}
-            selectedColor={config[activePart.id as keyof CharacterConfig].color}
-            onColorChange={handleColorChange}
-            isLoading={isLoading}
-          />
+         
         </div>
       </CardContent>
     </Card>

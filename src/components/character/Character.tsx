@@ -9,6 +9,8 @@ interface CharacterProps {
 
 const Character: React.FC<CharacterProps> = ({ config }) => {
   return (
+
+      
     <svg
       viewBox="0 0 160 160"
       className="character-svg"
@@ -20,6 +22,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       <CharacterPart type="eyes" style={config.eyes.style} color={config.eyes.color} />
       <CharacterPart type="mouth" style={config.mouth.style} color={config.mouth.color} />
     </svg>
+
   );
 };
 

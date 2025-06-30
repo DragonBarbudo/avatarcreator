@@ -11,11 +11,11 @@ interface PartSelectorProps {
 }
 
 const partIcons: { [key: string]: React.ReactNode } = {
-  face: <Icon icon="mingcute:face-fill" width="18" />,
-  hair: <Icon icon="mingcute:hair-2-fill" width="18" />,
-  eyes: <Icon icon="mingcute:eye-2-fill" width="18" />,
-  mouth: <Icon icon="mingcute:mouth-fill" width="18" />,
-  shirt: <Icon icon="mingcute:t-shirt-fill" width="18" />
+  face: <Icon icon="mingcute:face-fill" width="30" />,
+  hair: <Icon icon="mingcute:hair-2-fill" width="30" />,
+  eyes: <Icon icon="mingcute:eye-2-fill" width="30" />,
+  mouth: <Icon icon="mingcute:mouth-fill" width="30" />,
+  shirt: <Icon icon="mingcute:t-shirt-fill" width="30" />
 };
 
 const PartSelector: React.FC<PartSelectorProps> = ({ 

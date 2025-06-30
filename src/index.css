@@ -150,5 +150,5 @@
 }
 
 .save-button {
-  @apply flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg px-4 py-2.5 transition-colors;
+  @apply flex items-center justify-center gap-2 bg-primary hover:bg-primary/60 text-primary-foreground font-medium rounded-bl-xl rounded-sm px-4 py-2.5 transition-colors;
 }

@@ -15,7 +15,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
   isLoading
 }) => {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex justify-center gap-1.5">
       {colors.map((color) => (
         <button
           key={color}
