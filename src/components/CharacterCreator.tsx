@@ -165,11 +165,28 @@ const CharacterCreator: React.FC = () => {
     }
   };
 
-  const renderPartPreviews = () => {
+  const renderPartPreviews = async () => {
     const currentPart = activePart;
     const previews = [];
     
+    // Only render previews for styles that actually exist
     for (let i = 0; i < currentPart.options; i++) {
+      // Check if the corresponding SVG file exists
+      const styleId = i + 1; // Convert 0-based index to 1-based ID
+      let elementExists = false;
+      
+      try {
+        const response = await fetch(`${import.meta.env.BASE_URL}character-brand/${currentPart.id}/${currentPart.id}${styleId}.svg`);
+        elementExists = response.ok;
+      } catch {
+        elementExists = false;
+      }
+      
+      // Skip if the SVG file doesn't exist
+      if (!elementExists) {
+        continue;
+      }
+      
       let previewConfig;
       
       if (currentPart.id === 'hair') {
