@@ -16,7 +16,6 @@ const CharacterCreator: React.FC = () => {
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingProgress, setLoadingProgress] = useState<number>(0);
-  const [availableElements, setAvailableElements] = useState<{[key: string]: string[]}>({});
   const characterRef = useRef<HTMLDivElement>(null);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
@@ -151,13 +150,7 @@ const CharacterCreator: React.FC = () => {
   const renderPartPreviews = () => {
     const currentPart = activePart;
     const previews = [];
-    
-    // Get available elements for current part
-    const availableForPart = availableElements[currentPart.id === 'hair' ? 'fhair' : currentPart.id] || [];
-    const maxOptions = availableForPart.length;
-    
-    // Use the actual number of available elements instead of hardcoded count
-    for (let i = 0; i < maxOptions; i++) {
+    for (let i = 0; i < currentPart.options; i++) {
       let previewConfig;
       if (currentPart.id === 'hair') {
         previewConfig = {
@@ -186,34 +179,18 @@ const CharacterCreator: React.FC = () => {
       } else if ('style' in currentPartConfig) {
         currentStyle = currentPartConfig.style;
       }
-      
-      previews.push(
-        <PartPreview 
-          key={i} 
-          label={`Style ${i + 1}`} 
-          style={i} 
-          color={currentPartConfig.color} 
-          isSelected={currentStyle === i} 
-          onClick={() => handleStyleChange(i)}
-        >
-          <Character 
-            config={previewConfig} 
-            onElementsDiscovered={setAvailableElements}
-          />
-        </PartPreview>
-      );
+      previews.push(<PartPreview key={i} label={`Style ${i + 1}`} style={i} color={currentPartConfig.color} isSelected={currentStyle === i} onClick={() => handleStyleChange(i)}>
+          <Character config={previewConfig} />
+        </PartPreview>);
     }
-    return (
-      <div className="grid grid-cols-4 gap-0.5">
+    return <div className="grid grid-cols-4 gap-0.5">
         {previews}
-      </div>
-    );
+      </div>;
   };
   const getCurrentColorPalette = () => {
     return colorPalettes[activePart.id] || [];
   };
-  return (
-    <Card className="character-creator w-[380px] h-[800px] h-full overflow-hidden relative">
+  return <Card className="character-creator w-[380px] h-[800px] h-full overflow-hidden relative">
       <CardContent className="flex flex-col h-full p-2 gap-2">
         <div className="character-display bg-secondary/30 rounded-lg p-2 relative" ref={characterRef}>
           <CharacterPreview config={config} isLoading={isLoading} loadingProgress={loadingProgress} />
@@ -236,7 +213,6 @@ const CharacterCreator: React.FC = () => {
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
 export default CharacterCreator;
