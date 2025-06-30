@@ -9,38 +9,18 @@ import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
 import Character from "./character/Character";
+import { useSvgExistence } from "../hooks/useSvgExistence";
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingProgress, setLoadingProgress] = useState<number>(0);
-  const [existingStyles, setExistingStyles] = useState<{[key: string]: boolean}>({});
   const characterRef = useRef<HTMLDivElement>(null);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check which SVG files exist for the current active part
-  useEffect(() => {
-    const checkExistingStyles = async () => {
-      const styleChecks: {[key: string]: boolean} = {};
-      
-      for (let i = 0; i < activePart.options; i++) {
-        const styleId = i + 1;
-        const styleKey = `${activePart.id}-${styleId}`;
-        
-        try {
-          const response = await fetch(`${import.meta.env.BASE_URL}character-brand/${activePart.id}/${activePart.id}${styleId}.svg`);
-          styleChecks[styleKey] = response.ok;
-        } catch {
-          styleChecks[styleKey] = false;
-        }
-      }
-      
-      setExistingStyles(styleChecks);
-    };
-
-    checkExistingStyles();
-  }, [activePart]);
+  // Use the optimized hook for checking SVG existence
+  const { existingStyles, isLoading: stylesLoading } = useSvgExistence(activePart.id, activePart.options);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -190,6 +170,16 @@ const CharacterCreator: React.FC = () => {
   };
 
   const renderPartPreviews = () => {
+    if (stylesLoading) {
+      return (
+        <div className="grid grid-cols-4 gap-0.5">
+          {Array.from({ length: Math.min(activePart.options, 8) }).map((_, i) => (
+            <div key={i} className="aspect-square rounded-lg border animate-pulse bg-secondary/50" />
+          ))}
+        </div>
+      );
+    }
+
     const currentPart = activePart;
     const previews = [];
     
