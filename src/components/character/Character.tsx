@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
@@ -178,28 +179,6 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
   return (
     <div>
       <div ref={svgRef} className="character-display" />
-      <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
-        <div className="font-semibold mb-1">Active Elements:</div>
-        <div className="space-y-1">
-          {activeElements.length > 0 ? (
-            activeElements.map((element, index) => (
-              <div key={index} className="text-gray-700">
-                {element}
-              </div>
-            ))
-          ) : (
-            <div className="text-gray-500">No active elements found</div>
-          )}
-        </div>
-        <div className="mt-2 font-semibold mb-1">Available Elements:</div>
-        <div className="space-y-1">
-          {Object.entries(availableElements).map(([category, elements]) => (
-            <div key={category} className="text-gray-600">
-              <strong>{category}:</strong> {elements.length} items ({elements.join(', ')})
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
