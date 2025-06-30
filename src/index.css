@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,23 +97,19 @@
   }
 }
 
-/* Character styling */
-.character-svg {
-  width: 160px;
-  height: 160px;
+/* Avatar styling */
+.avatar-svg {
+  width: 300px;
+  height: 300px;
   max-width: 100%;
   max-height: 100%;
 }
 
-.character-hair .colorable,
-.character-eyes .colorable,
-.character-mouth .colorable,
-.character-shirt .colorable,
-.character-face .colorable {
+.avatar-svg .colorable {
   fill: var(--part-color);
 }
 
-/* Keep existing styles */
+/* Character creator styles */
 .character-creator {
   @apply bg-white dark:bg-gray-900 rounded-xl shadow-lg;
 }
