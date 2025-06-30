@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useRef, useState } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
@@ -187,4 +186,3 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
 };
 
 export default Character;
-
