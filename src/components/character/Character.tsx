@@ -77,7 +77,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       elementsToShow.push(shirtId);
     }
 
-    // For back hair, try to match the front hair style
+    // For back hair, match the front hair style number (not consecutive counter)
     const backHairId = `bhair-${config.hair.frontStyle + 1}`;
     if (clonedSvg.querySelector(`#${backHairId}`)) {
       elementsToShow.push(backHairId);
