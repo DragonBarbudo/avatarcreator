@@ -1,5 +1,4 @@
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -118,7 +117,7 @@
 .character-display {
   display: flex;
   align-items: center;
-  justify-center;
+  justify-content: center;
   min-height: 160px;
 }
 
@@ -127,19 +126,17 @@
 }
 
 /* Custom scrollbar styling */
-@layer utilities {
-  .options-row::-webkit-scrollbar {
-    height: 4px;
-    width: 4px;
-  }
-  
-  .options-row::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  
-  .options-row::-webkit-scrollbar-thumb {
-    @apply bg-secondary rounded-full;
-  }
+.options-row::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.options-row::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.options-row::-webkit-scrollbar-thumb {
+  @apply bg-secondary rounded-full;
 }
 
 .option-button {
@@ -153,4 +150,3 @@
 .save-button {
   @apply flex items-center justify-center gap-2 bg-primary hover:bg-primary/60 text-primary-foreground font-medium rounded-bl-xl rounded-sm px-4 py-2.5 transition-colors;
 }
-
