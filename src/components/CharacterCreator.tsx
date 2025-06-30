@@ -201,13 +201,17 @@ const CharacterCreator: React.FC = () => {
         }
       };
       
+      // Get current style value properly for comparison
+      const currentPartConfig = config[currentPart.id as keyof CharacterConfig];
+      const currentStyle = 'style' in currentPartConfig ? currentPartConfig.style : 0;
+      
       previews.push(
         <PartPreview
           key={i}
           label={`Style ${i + 1}`}
           style={i}
-          color={config[currentPart.id as keyof CharacterConfig].color}
-          isSelected={config[currentPart.id as keyof CharacterConfig].style === i}
+          color={currentPartConfig.color}
+          isSelected={currentStyle === i}
           onClick={() => handleStyleChange(i)}
         >
           <Character config={previewConfig} />
