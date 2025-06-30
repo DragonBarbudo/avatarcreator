@@ -125,7 +125,9 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
     elementsToShow.forEach(elementId => {
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
-        (element as SVGElement).style.display = 'block';
+        // For SVG elements, remove the display style entirely or set to inline
+        (element as SVGElement).style.display = '';
+        (element as SVGElement).style.visibility = 'visible';
         actuallyShown.push(elementId);
 
         // Apply colors to colorable elements
