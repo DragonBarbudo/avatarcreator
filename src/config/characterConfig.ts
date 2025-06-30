@@ -4,11 +4,11 @@ import { CharacterConfig, CharacterPart } from "../types/character";
 export const characterParts: CharacterPart[] = [
   { id: "eyes", label: "Eyes", options: 9, defaultColor: "#2F284C" },
   { id: "hair", label: "Hair", options: 23, defaultColor: "#482B79" },
-  { id: "brows", label: "Eyebrows", options: 9, defaultColor: "#3A366F" },
-  { id: "nose", label: "Nose", options: 9, defaultColor: "#D49677" },
-  { id: "mouth", label: "Mouth", options: 9, defaultColor: "#8B4B7A" },
-  { id: "face", label: "Face", options: 5, defaultColor: "#FADFC9" },
-  { id: "shirt", label: "Shirt", options: 2, defaultColor: "#342059" }
+  { id: "brows", label: "Eyebrows", options: 10, defaultColor: "#3A366F" },
+  { id: "nose", label: "Nose", options: 11, defaultColor: "#D49677" },
+  { id: "mouth", label: "Mouth", options: 17, defaultColor: "#8B4B7A" },
+  { id: "face", label: "Face", options: 9, defaultColor: "#FADFC9" },
+  { id: "shirt", label: "Shirt", options: 10, defaultColor: "#342059" }
 ];
 
 export const colorPalettes = {
