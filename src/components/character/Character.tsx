@@ -38,28 +38,54 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
       (element as SVGElement).style.display = 'none';
     });
 
-    // Show selected elements based on config
+    // Show selected elements based on config - but check if they exist first
     const elementsToShow: string[] = [];
     
-    // Add elements with proper ID format
-    elementsToShow.push(`eyes-${config.eyes.style + 1}`);
-    elementsToShow.push(`fhair-${config.hair.frontStyle + 1}`);
-    elementsToShow.push(`brows-${config.brows.style + 1}`);
-    elementsToShow.push(`nose-${config.nose.style + 1}`);
-    elementsToShow.push(`mouth-${config.mouth.style + 1}`);
-    elementsToShow.push(`face-${config.face.style + 1}`);
-    elementsToShow.push(`shirt-${config.shirt.style + 1}`);
+    // Add elements with proper ID format, but check if they exist in the SVG
+    const eyesId = `eyes-${config.eyes.style + 1}`;
+    if (clonedSvg.querySelector(`#${eyesId}`)) {
+      elementsToShow.push(eyesId);
+    }
+
+    const fhairId = `fhair-${config.hair.frontStyle + 1}`;
+    if (clonedSvg.querySelector(`#${fhairId}`)) {
+      elementsToShow.push(fhairId);
+    }
+
+    const browsId = `brows-${config.brows.style + 1}`;
+    if (clonedSvg.querySelector(`#${browsId}`)) {
+      elementsToShow.push(browsId);
+    }
+
+    const noseId = `nose-${config.nose.style + 1}`;
+    if (clonedSvg.querySelector(`#${noseId}`)) {
+      elementsToShow.push(noseId);
+    }
+
+    const mouthId = `mouth-${config.mouth.style + 1}`;
+    if (clonedSvg.querySelector(`#${mouthId}`)) {
+      elementsToShow.push(mouthId);
+    }
+
+    const faceId = `face-${config.face.style + 1}`;
+    if (clonedSvg.querySelector(`#${faceId}`)) {
+      elementsToShow.push(faceId);
+    }
+
+    const shirtId = `shirt-${config.shirt.style + 1}`;
+    if (clonedSvg.querySelector(`#${shirtId}`)) {
+      elementsToShow.push(shirtId);
+    }
 
     // For back hair, try to match the front hair style
     const backHairId = `bhair-${config.hair.frontStyle + 1}`;
-    const backHairElement = clonedSvg.querySelector(`#${backHairId}`);
-    if (backHairElement) {
+    if (clonedSvg.querySelector(`#${backHairId}`)) {
       elementsToShow.push(backHairId);
     }
 
     console.log('Showing elements:', elementsToShow);
 
-    // Show only the selected elements
+    // Show only the selected elements that exist
     elementsToShow.forEach(elementId => {
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
@@ -99,8 +125,6 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
         colorablePaths.forEach(path => {
           (path as SVGElement).setAttribute('fill', color);
         });
-      } else {
-        console.log('Element not found:', elementId);
       }
     });
 
