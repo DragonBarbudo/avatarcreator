@@ -15,8 +15,32 @@ const CharacterCreator: React.FC = () => {
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingProgress, setLoadingProgress] = useState<number>(0);
+  const [existingStyles, setExistingStyles] = useState<{[key: string]: boolean}>({});
   const characterRef = useRef<HTMLDivElement>(null);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check which SVG files exist for the current active part
+  useEffect(() => {
+    const checkExistingStyles = async () => {
+      const styleChecks: {[key: string]: boolean} = {};
+      
+      for (let i = 0; i < activePart.options; i++) {
+        const styleId = i + 1;
+        const styleKey = `${activePart.id}-${styleId}`;
+        
+        try {
+          const response = await fetch(`${import.meta.env.BASE_URL}character-brand/${activePart.id}/${activePart.id}${styleId}.svg`);
+          styleChecks[styleKey] = response.ok;
+        } catch {
+          styleChecks[styleKey] = false;
+        }
+      }
+      
+      setExistingStyles(styleChecks);
+    };
+
+    checkExistingStyles();
+  }, [activePart]);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -165,25 +189,17 @@ const CharacterCreator: React.FC = () => {
     }
   };
 
-  const renderPartPreviews = async () => {
+  const renderPartPreviews = () => {
     const currentPart = activePart;
     const previews = [];
     
     // Only render previews for styles that actually exist
     for (let i = 0; i < currentPart.options; i++) {
-      // Check if the corresponding SVG file exists
-      const styleId = i + 1; // Convert 0-based index to 1-based ID
-      let elementExists = false;
-      
-      try {
-        const response = await fetch(`${import.meta.env.BASE_URL}character-brand/${currentPart.id}/${currentPart.id}${styleId}.svg`);
-        elementExists = response.ok;
-      } catch {
-        elementExists = false;
-      }
+      const styleId = i + 1;
+      const styleKey = `${currentPart.id}-${styleId}`;
       
       // Skip if the SVG file doesn't exist
-      if (!elementExists) {
+      if (!existingStyles[styleKey]) {
         continue;
       }
       
