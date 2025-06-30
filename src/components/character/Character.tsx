@@ -84,33 +84,38 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
     // Show selected elements based on config and available elements
     const elementsToShow: string[] = [];
 
-    // Map config styles to actual available elements using array indices
-    if (discovered.eyes.length > config.eyes.style) {
-      elementsToShow.push(discovered.eyes[config.eyes.style]);
-    }
-    if (discovered.fhair.length > config.hair.frontStyle) {
-      elementsToShow.push(discovered.fhair[config.hair.frontStyle]);
-    }
-    if (discovered.brows.length > config.brows.style) {
-      elementsToShow.push(discovered.brows[config.brows.style]);
-    }
-    if (discovered.nose.length > config.nose.style) {
-      elementsToShow.push(discovered.nose[config.nose.style]);
-    }
-    if (discovered.mouth.length > config.mouth.style) {
-      elementsToShow.push(discovered.mouth[config.mouth.style]);
-    }
-    if (discovered.face.length > config.face.style) {
-      elementsToShow.push(discovered.face[config.face.style]);
-    }
-    if (discovered.shirt.length > config.shirt.style) {
-      elementsToShow.push(discovered.shirt[config.shirt.style]);
-    }
+    // Helper function to get element ID by style index
+    const getElementByStyleIndex = (elementArray: string[], styleIndex: number) => {
+      // For style index 0, get the first element in the array
+      // For style index 1, get the second element in the array, etc.
+      return elementArray[styleIndex] || null;
+    };
+
+    // Map config styles to actual available elements
+    const eyesElement = getElementByStyleIndex(discovered.eyes, config.eyes.style);
+    if (eyesElement) elementsToShow.push(eyesElement);
+
+    const fhairElement = getElementByStyleIndex(discovered.fhair, config.hair.frontStyle);
+    if (fhairElement) elementsToShow.push(fhairElement);
+
+    const browsElement = getElementByStyleIndex(discovered.brows, config.brows.style);
+    if (browsElement) elementsToShow.push(browsElement);
+
+    const noseElement = getElementByStyleIndex(discovered.nose, config.nose.style);
+    if (noseElement) elementsToShow.push(noseElement);
+
+    const mouthElement = getElementByStyleIndex(discovered.mouth, config.mouth.style);
+    if (mouthElement) elementsToShow.push(mouthElement);
+
+    const faceElement = getElementByStyleIndex(discovered.face, config.face.style);
+    if (faceElement) elementsToShow.push(faceElement);
+
+    const shirtElement = getElementByStyleIndex(discovered.shirt, config.shirt.style);
+    if (shirtElement) elementsToShow.push(shirtElement);
 
     // For back hair, try to match the front hair style
-    if (discovered.bhair.length > config.hair.frontStyle) {
-      elementsToShow.push(discovered.bhair[config.hair.frontStyle]);
-    }
+    const bhairElement = getElementByStyleIndex(discovered.bhair, config.hair.frontStyle);
+    if (bhairElement) elementsToShow.push(bhairElement);
 
     console.log('Showing elements:', elementsToShow);
     const actuallyShown: string[] = [];
