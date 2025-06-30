@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -8,6 +9,7 @@ import PartPreview from "./ui/PartPreview";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
+import HairSelector from "./character/HairSelector";
 import Character from "./character/Character";
 
 const CharacterCreator: React.FC = () => {
@@ -81,6 +83,8 @@ const CharacterCreator: React.FC = () => {
   }, []);
 
   const handleStyleChange = (newStyle: number) => {
+    if (activePart.id === 'hair') return; // Hair is handled separately
+    
     setConfig({
       ...config,
       [activePart.id]: {
@@ -100,6 +104,26 @@ const CharacterCreator: React.FC = () => {
     });
   };
 
+  const handleFrontHairChange = (style: number) => {
+    setConfig({
+      ...config,
+      hair: {
+        ...config.hair,
+        frontStyle: style,
+      },
+    });
+  };
+
+  const handleBackHairChange = (style: number) => {
+    setConfig({
+      ...config,
+      hair: {
+        ...config.hair,
+        backStyle: style,
+      },
+    });
+  };
+
   const saveCharacter = async () => {
     if (!characterRef.current) return;
 
@@ -109,16 +133,6 @@ const CharacterCreator: React.FC = () => {
 
       const clonedSvg = svgElement.cloneNode(true) as SVGElement;
       
-      Object.keys(config).forEach(partKey => {
-        const part = partKey as keyof CharacterConfig;
-        const color = config[part].color;
-        
-        const colorablePaths = clonedSvg.querySelectorAll(`.character-${part} .colorable, .character-${part} path.colorable`);
-        colorablePaths.forEach(path => {
-          (path as SVGElement).setAttribute('fill', color);
-        });
-      });
-
       const svgData = new XMLSerializer().serializeToString(clonedSvg);
       const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
       
@@ -164,40 +178,48 @@ const CharacterCreator: React.FC = () => {
   };
 
   const renderPartPreviews = () => {
+    if (activePart.id === 'hair') {
+      return (
+        <HairSelector
+          config={config}
+          onFrontHairChange={handleFrontHairChange}
+          onBackHairChange={handleBackHairChange}
+          isLoading={isLoading}
+        />
+      );
+    }
+
     const currentPart = activePart;
     const previews = [];
     
     for (let i = 0; i < currentPart.options; i++) {
       const previewConfig = {
-        ...defaultConfig,
+        ...config,
         [currentPart.id]: {
+          ...config[currentPart.id as keyof CharacterConfig],
           style: i,
-          color: config[currentPart.id as keyof CharacterConfig].color,
         }
       };
-      
-      previewConfig.shirt.color = config.shirt.color
-      previewConfig.face.color = config.face.color
-      previewConfig.hair.color = config.hair.color
-      previewConfig.eyes.color = config.eyes.color
-      previewConfig.mouth.color = config.mouth.color
       
       previews.push(
         <PartPreview
           key={i}
-          label={`Estilo ${i + 1}`}
+          label={`Style ${i + 1}`}
           style={i}
           color={config[currentPart.id as keyof CharacterConfig].color}
           isSelected={config[currentPart.id as keyof CharacterConfig].style === i}
           onClick={() => handleStyleChange(i)}
         >
           <Character config={previewConfig} />
-
         </PartPreview>
       );
     }
     
-    return previews;
+    return (
+      <div className="grid grid-cols-4 gap-0.5">
+        {previews}
+      </div>
+    );
   };
 
   const getCurrentColorPalette = () => {
@@ -215,7 +237,7 @@ const CharacterCreator: React.FC = () => {
           />
         </div>
 
-        <div className="flex-1 flex gap-2 min-h-0 ">
+        <div className="flex-1 flex gap-2 min-h-0">
           <div className="flex-1 flex flex-col gap-2 overflow-hidden">
             <PartSelector 
               characterParts={characterParts} 
@@ -223,7 +245,8 @@ const CharacterCreator: React.FC = () => {
               setActivePart={setActivePart}
               isLoading={isLoading}
             />
-             <ColorPalette 
+            
+            <ColorPalette 
               colors={getCurrentColorPalette()}
               selectedColor={config[activePart.id as keyof CharacterConfig].color}
               onColorChange={handleColorChange}
@@ -231,19 +254,18 @@ const CharacterCreator: React.FC = () => {
             />
 
             <div className="flex-1 overflow-y-auto">
-              <div className="grid grid-cols-4 gap-0.5">
-                {renderPartPreviews()}
-              </div>
+              {renderPartPreviews()}
             </div>
 
-            <button onClick={saveCharacter}
-              disabled={isLoading} className="absolute top-2 right-2 save-button ">
-                <Icon icon="mingcute:check-2-fill" width="16" />
-                <span className="text-xs">Guardar</span>
-              </button>
-            
+            <button 
+              onClick={saveCharacter}
+              disabled={isLoading} 
+              className="absolute top-2 right-2 save-button"
+            >
+              <Icon icon="mingcute:check-2-fill" width="16" />
+              <span className="text-xs">Guardar</span>
+            </button>
           </div>
-         
         </div>
       </CardContent>
     </Card>

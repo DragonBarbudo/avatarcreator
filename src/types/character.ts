@@ -1,18 +1,27 @@
 
 export interface CharacterConfig {
-  hair: {
-    style: number;
-    color: string;
-  };
-  face: {
-    style: number;
-    color: string;
-  };
   eyes: {
     style: number;
     color: string;
   };
+  hair: {
+    frontStyle: number;
+    backStyle: number;
+    color: string;
+  };
+  brows: {
+    style: number;
+    color: string;
+  };
+  nose: {
+    style: number;
+    color: string;
+  };
   mouth: {
+    style: number;
+    color: string;
+  };
+  face: {
     style: number;
     color: string;
   };
@@ -27,6 +36,11 @@ export interface CharacterPart {
   label: string;
   options: number;
   defaultColor: string;
+  hasSubParts?: boolean;
+  subParts?: {
+    front?: number;
+    back?: number;
+  };
 }
 
 export interface ColorPalette {
