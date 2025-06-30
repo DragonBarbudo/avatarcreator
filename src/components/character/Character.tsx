@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
 
@@ -10,7 +10,6 @@ interface CharacterProps {
 const Character: React.FC<CharacterProps> = ({ config }) => {
   const { svgContent, isLoading } = useAvatarSvg();
   const svgRef = useRef<HTMLDivElement>(null);
-  const [activeElements, setActiveElements] = useState<string[]>([]);
 
   useEffect(() => {
     if (!svgContent || !svgRef.current) return;
@@ -19,11 +18,12 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = svgContent;
     const svgElement = tempDiv.querySelector('svg');
+    
     if (!svgElement) return;
 
     // Clone the SVG to avoid modifying the original
     const clonedSvg = svgElement.cloneNode(true) as SVGElement;
-
+    
     // Set proper viewBox and dimensions
     clonedSvg.setAttribute('viewBox', '0 0 340 341');
     clonedSvg.setAttribute('width', '160');
@@ -32,7 +32,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
 
     // Get all possible elements that could be part of the character
     const allPossibleElements = clonedSvg.querySelectorAll('[id*="eyes-"], [id*="fhair-"], [id*="bhair-"], [id*="brows-"], [id*="nose-"], [id*="mouth-"], [id*="face-"], [id*="shirt-"]');
-
+    
     // Hide ALL elements first
     allPossibleElements.forEach(element => {
       (element as SVGElement).style.display = 'none';
@@ -40,7 +40,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
 
     // Show selected elements based on config
     const elementsToShow: string[] = [];
-
+    
     // Add elements with proper ID format
     elementsToShow.push(`eyes-${config.eyes.style + 1}`);
     elementsToShow.push(`fhair-${config.hair.frontStyle + 1}`);
@@ -58,18 +58,17 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     }
 
     console.log('Showing elements:', elementsToShow);
-    const actuallyShown: string[] = [];
 
     // Show only the selected elements
     elementsToShow.forEach(elementId => {
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
         (element as SVGElement).style.display = 'block';
-        actuallyShown.push(elementId);
-
+        
         // Apply colors to colorable elements
         const partType = elementId.split('-')[0];
         let color = '';
+        
         switch (partType) {
           case 'eyes':
             color = config.eyes.color;
@@ -94,7 +93,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             color = config.shirt.color;
             break;
         }
-
+        
         // Apply color to colorable paths within the element
         const colorablePaths = element.querySelectorAll('.colorable, path.colorable');
         colorablePaths.forEach(path => {
@@ -104,9 +103,6 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
         console.log('Element not found:', elementId);
       }
     });
-
-    // Update the active elements state for debugging
-    setActiveElements(actuallyShown);
 
     // Clear previous content and add new SVG
     svgRef.current.innerHTML = '';
@@ -121,25 +117,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     );
   }
 
-  return (
-    <div>
-      <div ref={svgRef} className="character-display" />
-      <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
-        <div className="font-semibold mb-1">Active Elements:</div>
-        <div className="space-y-1">
-          {activeElements.length > 0 ? (
-            activeElements.map((element, index) => (
-              <div key={index} className="text-gray-700">
-                {element}
-              </div>
-            ))
-          ) : (
-            <div className="text-gray-500">No active elements found</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <div ref={svgRef} className="character-display" />;
 };
 
 export default Character;
