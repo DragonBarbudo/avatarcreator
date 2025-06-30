@@ -1,16 +1,17 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
 
 interface CharacterProps {
   config: CharacterConfig;
+  onElementsDiscovered?: (elements: {[key: string]: string[]}) => void;
 }
 
-const Character: React.FC<CharacterProps> = ({ config }) => {
+const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) => {
   const { svgContent, isLoading } = useAvatarSvg();
   const svgRef = useRef<HTMLDivElement>(null);
   const [activeElements, setActiveElements] = useState<string[]>([]);
+  const [availableElements, setAvailableElements] = useState<{[key: string]: string[]}>({});
 
   useEffect(() => {
     if (!svgContent || !svgRef.current) return;
@@ -30,31 +31,84 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     clonedSvg.setAttribute('height', '160');
     clonedSvg.classList.add('character-svg');
 
-    // Get all possible elements that could be part of the character
-    const allPossibleElements = clonedSvg.querySelectorAll('[id*="eyes-"], [id*="fhair-"], [id*="bhair-"], [id*="brows-"], [id*="nose-"], [id*="mouth-"], [id*="face-"], [id*="shirt-"]');
+    // Discover available elements by category
+    const discovered: {[key: string]: string[]} = {
+      eyes: [],
+      fhair: [],
+      bhair: [],
+      brows: [],
+      nose: [],
+      mouth: [],
+      face: [],
+      shirt: []
+    };
+
+    // Find all elements with IDs matching our patterns
+    const allElements = clonedSvg.querySelectorAll('[id]');
+    allElements.forEach(element => {
+      const id = element.id;
+      if (id.startsWith('eyes-')) discovered.eyes.push(id);
+      else if (id.startsWith('fhair-')) discovered.fhair.push(id);
+      else if (id.startsWith('bhair-')) discovered.bhair.push(id);
+      else if (id.startsWith('brows-')) discovered.brows.push(id);
+      else if (id.startsWith('nose-')) discovered.nose.push(id);
+      else if (id.startsWith('mouth-')) discovered.mouth.push(id);
+      else if (id.startsWith('face-')) discovered.face.push(id);
+      else if (id.startsWith('shirt-')) discovered.shirt.push(id);
+    });
+
+    // Sort arrays to ensure consistent ordering
+    Object.keys(discovered).forEach(key => {
+      discovered[key].sort((a, b) => {
+        const numA = parseInt(a.split('-')[1]);
+        const numB = parseInt(b.split('-')[1]);
+        return numA - numB;
+      });
+    });
+
+    setAvailableElements(discovered);
+    
+    // Call the callback to inform parent about discovered elements
+    if (onElementsDiscovered) {
+      onElementsDiscovered(discovered);
+    }
+
+    console.log('Discovered available elements:', discovered);
 
     // Hide ALL elements first
-    allPossibleElements.forEach(element => {
+    allElements.forEach(element => {
       (element as SVGElement).style.display = 'none';
     });
 
-    // Show selected elements based on config
+    // Show selected elements based on config and available elements
     const elementsToShow: string[] = [];
 
-    // Add elements with proper ID format
-    elementsToShow.push(`eyes-${config.eyes.style + 1}`);
-    elementsToShow.push(`fhair-${config.hair.frontStyle + 1}`);
-    elementsToShow.push(`brows-${config.brows.style + 1}`);
-    elementsToShow.push(`nose-${config.nose.style + 1}`);
-    elementsToShow.push(`mouth-${config.mouth.style + 1}`);
-    elementsToShow.push(`face-${config.face.style + 1}`);
-    elementsToShow.push(`shirt-${config.shirt.style + 1}`);
+    // Map config styles to actual available elements
+    if (discovered.eyes[config.eyes.style]) {
+      elementsToShow.push(discovered.eyes[config.eyes.style]);
+    }
+    if (discovered.fhair[config.hair.frontStyle]) {
+      elementsToShow.push(discovered.fhair[config.hair.frontStyle]);
+    }
+    if (discovered.brows[config.brows.style]) {
+      elementsToShow.push(discovered.brows[config.brows.style]);
+    }
+    if (discovered.nose[config.nose.style]) {
+      elementsToShow.push(discovered.nose[config.nose.style]);
+    }
+    if (discovered.mouth[config.mouth.style]) {
+      elementsToShow.push(discovered.mouth[config.mouth.style]);
+    }
+    if (discovered.face[config.face.style]) {
+      elementsToShow.push(discovered.face[config.face.style]);
+    }
+    if (discovered.shirt[config.shirt.style]) {
+      elementsToShow.push(discovered.shirt[config.shirt.style]);
+    }
 
     // For back hair, try to match the front hair style
-    const backHairId = `bhair-${config.hair.frontStyle + 1}`;
-    const backHairElement = clonedSvg.querySelector(`#${backHairId}`);
-    if (backHairElement) {
-      elementsToShow.push(backHairId);
+    if (discovered.bhair[config.hair.frontStyle]) {
+      elementsToShow.push(discovered.bhair[config.hair.frontStyle]);
     }
 
     console.log('Showing elements:', elementsToShow);
@@ -111,7 +165,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     // Clear previous content and add new SVG
     svgRef.current.innerHTML = '';
     svgRef.current.appendChild(clonedSvg);
-  }, [svgContent, config]);
+  }, [svgContent, config, onElementsDiscovered]);
 
   if (isLoading) {
     return (
@@ -136,6 +190,14 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
           ) : (
             <div className="text-gray-500">No active elements found</div>
           )}
+        </div>
+        <div className="mt-2 font-semibold mb-1">Available Elements:</div>
+        <div className="space-y-1">
+          {Object.entries(availableElements).map(([category, elements]) => (
+            <div key={category} className="text-gray-600">
+              <strong>{category}:</strong> {elements.length} items ({elements.join(', ')})
+            </div>
+          ))}
         </div>
       </div>
     </div>
