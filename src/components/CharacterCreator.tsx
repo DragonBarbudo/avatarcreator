@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
@@ -9,7 +8,6 @@ import PartPreview from "./ui/PartPreview";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
-import HairSelector from "./character/HairSelector";
 import Character from "./character/Character";
 
 const CharacterCreator: React.FC = () => {
@@ -83,15 +81,25 @@ const CharacterCreator: React.FC = () => {
   }, []);
 
   const handleStyleChange = (newStyle: number) => {
-    if (activePart.id === 'hair') return; // Hair is handled separately
-    
-    setConfig({
-      ...config,
-      [activePart.id]: {
-        ...config[activePart.id as keyof CharacterConfig],
-        style: newStyle,
-      },
-    });
+    if (activePart.id === 'hair') {
+      // For hair, update front style and automatically sync back style
+      setConfig({
+        ...config,
+        hair: {
+          ...config.hair,
+          frontStyle: newStyle,
+          backStyle: newStyle, // Automatically match back hair to front hair
+        },
+      });
+    } else {
+      setConfig({
+        ...config,
+        [activePart.id]: {
+          ...config[activePart.id as keyof CharacterConfig],
+          style: newStyle,
+        },
+      });
+    }
   };
 
   const handleColorChange = (newColor: string) => {
@@ -100,26 +108,6 @@ const CharacterCreator: React.FC = () => {
       [activePart.id]: {
         ...config[activePart.id as keyof CharacterConfig],
         color: newColor,
-      },
-    });
-  };
-
-  const handleFrontHairChange = (style: number) => {
-    setConfig({
-      ...config,
-      hair: {
-        ...config.hair,
-        frontStyle: style,
-      },
-    });
-  };
-
-  const handleBackHairChange = (style: number) => {
-    setConfig({
-      ...config,
-      hair: {
-        ...config.hair,
-        backStyle: style,
       },
     });
   };
@@ -178,32 +166,40 @@ const CharacterCreator: React.FC = () => {
   };
 
   const renderPartPreviews = () => {
-    if (activePart.id === 'hair') {
-      return (
-        <HairSelector
-          config={config}
-          onFrontHairChange={handleFrontHairChange}
-          onBackHairChange={handleBackHairChange}
-          isLoading={isLoading}
-        />
-      );
-    }
-
     const currentPart = activePart;
     const previews = [];
     
     for (let i = 0; i < currentPart.options; i++) {
-      const previewConfig = {
-        ...config,
-        [currentPart.id]: {
-          ...config[currentPart.id as keyof CharacterConfig],
-          style: i,
-        }
-      };
+      let previewConfig;
+      
+      if (currentPart.id === 'hair') {
+        previewConfig = {
+          ...config,
+          hair: {
+            ...config.hair,
+            frontStyle: i,
+            backStyle: i, // Automatically match back hair
+          }
+        };
+      } else {
+        previewConfig = {
+          ...config,
+          [currentPart.id]: {
+            ...config[currentPart.id as keyof CharacterConfig],
+            style: i,
+          }
+        };
+      }
       
       // Get current style value properly for comparison
       const currentPartConfig = config[currentPart.id as keyof CharacterConfig];
-      const currentStyle = 'style' in currentPartConfig ? currentPartConfig.style : 0;
+      let currentStyle = 0;
+      
+      if (currentPart.id === 'hair') {
+        currentStyle = config.hair.frontStyle;
+      } else if ('style' in currentPartConfig) {
+        currentStyle = currentPartConfig.style;
+      }
       
       previews.push(
         <PartPreview

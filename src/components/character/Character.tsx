@@ -40,13 +40,26 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     const elementsToShow = [
       `eyes-${config.eyes.style + 1}`,
       `fhair-${config.hair.frontStyle + 1}`,
-      `bhair-${config.hair.backStyle + 1}`,
       `brows-${config.brows.style + 1}`,
       `nose-${config.nose.style + 1}`,
       `mouth-${config.mouth.style + 1}`,
       `face-${config.face.style + 1}`,
       `shirt-${config.shirt.style + 1}`
     ];
+
+    // For back hair, try to match the front hair style first, then fall back to configured back style
+    const backHairId = `bhair-${config.hair.frontStyle + 1}`;
+    const backHairElement = clonedSvg.querySelector(`#${backHairId}`);
+    if (backHairElement) {
+      elementsToShow.push(backHairId);
+    } else {
+      // If no matching back hair, try the configured back style
+      const fallbackBackHairId = `bhair-${config.hair.backStyle + 1}`;
+      const fallbackBackHairElement = clonedSvg.querySelector(`#${fallbackBackHairId}`);
+      if (fallbackBackHairElement) {
+        elementsToShow.push(fallbackBackHairId);
+      }
+    }
 
     elementsToShow.forEach(elementId => {
       const element = clonedSvg.querySelector(`#${elementId}`);
