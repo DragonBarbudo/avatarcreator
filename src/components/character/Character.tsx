@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useRef, useState } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
@@ -84,31 +85,31 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
     // Show selected elements based on config and available elements
     const elementsToShow: string[] = [];
 
-    // Map config styles to actual available elements
-    if (discovered.eyes[config.eyes.style]) {
+    // Map config styles to actual available elements using array indices
+    if (discovered.eyes.length > config.eyes.style) {
       elementsToShow.push(discovered.eyes[config.eyes.style]);
     }
-    if (discovered.fhair[config.hair.frontStyle]) {
+    if (discovered.fhair.length > config.hair.frontStyle) {
       elementsToShow.push(discovered.fhair[config.hair.frontStyle]);
     }
-    if (discovered.brows[config.brows.style]) {
+    if (discovered.brows.length > config.brows.style) {
       elementsToShow.push(discovered.brows[config.brows.style]);
     }
-    if (discovered.nose[config.nose.style]) {
+    if (discovered.nose.length > config.nose.style) {
       elementsToShow.push(discovered.nose[config.nose.style]);
     }
-    if (discovered.mouth[config.mouth.style]) {
+    if (discovered.mouth.length > config.mouth.style) {
       elementsToShow.push(discovered.mouth[config.mouth.style]);
     }
-    if (discovered.face[config.face.style]) {
+    if (discovered.face.length > config.face.style) {
       elementsToShow.push(discovered.face[config.face.style]);
     }
-    if (discovered.shirt[config.shirt.style]) {
+    if (discovered.shirt.length > config.shirt.style) {
       elementsToShow.push(discovered.shirt[config.shirt.style]);
     }
 
     // For back hair, try to match the front hair style
-    if (discovered.bhair[config.hair.frontStyle]) {
+    if (discovered.bhair.length > config.hair.frontStyle) {
       elementsToShow.push(discovered.bhair[config.hair.frontStyle]);
     }
 
@@ -117,6 +118,8 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
 
     // Show only the selected elements
     elementsToShow.forEach(elementId => {
+      if (!elementId) return; // Skip if elementId is undefined
+      
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
         (element as SVGElement).style.display = 'block';
@@ -184,3 +187,4 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
 };
 
 export default Character;
+
