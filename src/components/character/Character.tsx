@@ -81,49 +81,24 @@ const Character: React.FC<CharacterProps> = ({ config, onElementsDiscovered }) =
       (element as SVGElement).style.display = 'none';
     });
 
-    // Show selected elements based on config and available elements
+    // Show selected elements based on config - using direct ID construction
     const elementsToShow: string[] = [];
 
-    // Helper function to get element ID by style index
-    const getElementByStyleIndex = (elementArray: string[], styleIndex: number) => {
-      // For style index 0, get the first element in the array
-      // For style index 1, get the second element in the array, etc.
-      return elementArray[styleIndex] || null;
-    };
-
-    // Map config styles to actual available elements
-    const eyesElement = getElementByStyleIndex(discovered.eyes, config.eyes.style);
-    if (eyesElement) elementsToShow.push(eyesElement);
-
-    const fhairElement = getElementByStyleIndex(discovered.fhair, config.hair.frontStyle);
-    if (fhairElement) elementsToShow.push(fhairElement);
-
-    const browsElement = getElementByStyleIndex(discovered.brows, config.brows.style);
-    if (browsElement) elementsToShow.push(browsElement);
-
-    const noseElement = getElementByStyleIndex(discovered.nose, config.nose.style);
-    if (noseElement) elementsToShow.push(noseElement);
-
-    const mouthElement = getElementByStyleIndex(discovered.mouth, config.mouth.style);
-    if (mouthElement) elementsToShow.push(mouthElement);
-
-    const faceElement = getElementByStyleIndex(discovered.face, config.face.style);
-    if (faceElement) elementsToShow.push(faceElement);
-
-    const shirtElement = getElementByStyleIndex(discovered.shirt, config.shirt.style);
-    if (shirtElement) elementsToShow.push(shirtElement);
-
-    // For back hair, try to match the front hair style
-    const bhairElement = getElementByStyleIndex(discovered.bhair, config.hair.frontStyle);
-    if (bhairElement) elementsToShow.push(bhairElement);
+    // Construct element IDs based on config (config uses 0-based, SVG uses 1-based)
+    elementsToShow.push(`eyes-${config.eyes.style + 1}`);
+    elementsToShow.push(`fhair-${config.hair.frontStyle + 1}`);
+    elementsToShow.push(`bhair-${config.hair.frontStyle + 1}`); // Match back hair to front hair
+    elementsToShow.push(`brows-${config.brows.style + 1}`);
+    elementsToShow.push(`nose-${config.nose.style + 1}`);
+    elementsToShow.push(`mouth-${config.mouth.style + 1}`);
+    elementsToShow.push(`face-${config.face.style + 1}`);
+    elementsToShow.push(`shirt-${config.shirt.style + 1}`);
 
     console.log('Showing elements:', elementsToShow);
     const actuallyShown: string[] = [];
 
     // Show only the selected elements
     elementsToShow.forEach(elementId => {
-      if (!elementId) return; // Skip if elementId is undefined
-      
       const element = clonedSvg.querySelector(`#${elementId}`);
       if (element) {
         (element as SVGElement).style.display = 'block';
