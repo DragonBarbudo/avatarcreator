@@ -66,8 +66,12 @@ const PartPreviewGrid: React.FC<PartPreviewGridProps> = ({
   }
   
   return (
-    <div className="grid grid-cols-4 gap-0.5">
-      {previews}
+    <div className="grid grid-cols-4 gap-0.5 max-w-[560px] mx-auto">
+      {previews.map((preview, index) => (
+        <div key={index} className="max-w-[140px]">
+          {preview}
+        </div>
+      ))}
     </div>
   );
 };

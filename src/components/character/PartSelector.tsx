@@ -13,8 +13,8 @@ interface PartSelectorProps {
 const partIcons: { [key: string]: React.ReactNode } = {
   eyes: <Icon icon="mingcute:eye-2-fill" width="20" />,
   hair: <Icon icon="mingcute:hair-2-fill" width="20" />,
-  brows: <Icon icon="material-symbols:eyebrow-outline" width="20" />,
-  nose: <Icon icon="material-symbols:nose" width="20" />,
+  brows: <Icon icon="mingcute:eyebrow-fill" width="20" />,
+  nose: <Icon icon="mingcute:nose-fill" width="20" />,
   mouth: <Icon icon="mingcute:mouth-fill" width="20" />,
   face: <Icon icon="mingcute:face-fill" width="20" />,
   shirt: <Icon icon="mingcute:t-shirt-fill" width="20" />
