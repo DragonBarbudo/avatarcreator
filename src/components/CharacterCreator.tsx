@@ -58,9 +58,9 @@ const CharacterCreator: React.FC = () => {
   };
 
   return (
-    <Card className="character-creator w-[380px] h-[520px] overflow-hidden relative">
-      <CardContent className="flex flex-col h-full p-2 gap-2">
-        <div className="character-display bg-secondary/30 rounded-lg p-2 relative" ref={characterRef}>
+    <Card className="character-creator w-[800px] h-[600px] overflow-hidden relative">
+      <CardContent className="flex flex-col h-full p-4 gap-4">
+        <div className="character-display bg-secondary/30 rounded-lg p-4 relative" ref={characterRef}>
           <CharacterPreview 
             config={config} 
             isLoading={isLoading} 
@@ -68,8 +68,8 @@ const CharacterCreator: React.FC = () => {
           />
         </div>
 
-        <div className="flex-1 flex gap-2 min-h-0">
-          <div className="flex-1 flex flex-col gap-2 overflow-hidden">
+        <div className="flex-1 flex gap-4 min-h-0">
+          <div className="flex-1 flex flex-col gap-4 overflow-hidden">
             <PartSelector 
               characterParts={characterParts} 
               activePart={activePart} 
