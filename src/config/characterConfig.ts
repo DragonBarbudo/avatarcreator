@@ -1,4 +1,3 @@
-
 import { CharacterConfig, CharacterPart } from "../types/character";
 
 export const characterParts: CharacterPart[] = [
@@ -8,7 +7,8 @@ export const characterParts: CharacterPart[] = [
   { id: "nose", label: "Nose", options: 11, defaultColor: "#D49677" },
   { id: "mouth", label: "Mouth", options: 17, defaultColor: "#8B4B7A" },
   { id: "face", label: "Face", options: 9, defaultColor: "#FADFC9" },
-  { id: "shirt", label: "Shirt", options: 9, defaultColor: "#342059" }
+  { id: "shirt", label: "Shirt", options: 9, defaultColor: "#342059" },
+  { id: "colors", label: "Colors", options: 6, defaultColor: "#2F284C" }
 ];
 
 export const colorPalettes = {
@@ -18,7 +18,8 @@ export const colorPalettes = {
   nose: ["#D49677", "#FADFC9", "#F4C8AB", "#E5B091"],
   mouth: ["#8B4B7A", "#ef7e7e", "#D49677", "#553110"],
   face: ["#FADFC9", "#F4C8AB", "#E5B091", "#D49677"],
-  shirt: ["#4d1aa8", "#03bdea", "#ef7e7e", "#342059", "#8a5648"]
+  shirt: ["#4d1aa8", "#03bdea", "#ef7e7e", "#342059", "#8a5648"],
+  colors: ["#2F284C", "#13387f", "#343537", "#49041b", "#553110", "#4d1aa8"]
 };
 
 export const defaultConfig: CharacterConfig = {

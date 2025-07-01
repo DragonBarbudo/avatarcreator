@@ -77,19 +77,39 @@ const CharacterCreator: React.FC = () => {
               isLoading={isLoading}
             />
             
-            <ColorPalette 
-              colors={getCurrentColorPalette()}
-              selectedColor={config[activePart.id as keyof CharacterConfig].color}
-              onColorChange={handleColorChange}
-              isLoading={isLoading}
-            />
+            {activePart.id === 'colors' ? (
+              <ColorPalette 
+                colors={getCurrentColorPalette()}
+                selectedColor={config[activePart.id as keyof CharacterConfig]?.color || colorPalettes.colors[0]}
+                onColorChange={handleColorChange}
+                isLoading={isLoading}
+              />
+            ) : null}
 
             <div className="flex-1 overflow-y-auto">
-              <PartPreviewGrid
-                activePart={activePart}
-                config={config}
-                onStyleChange={handleStyleChange}
-              />
+              {activePart.id !== 'colors' ? (
+                <PartPreviewGrid
+                  activePart={activePart}
+                  config={config}
+                  onStyleChange={handleStyleChange}
+                />
+              ) : (
+                <div className="grid grid-cols-4 gap-2 max-w-[480px] mx-auto">
+                  {getCurrentColorPalette().map((color, index) => (
+                    <button
+                      key={index}
+                      className={`aspect-square rounded-lg border-2 transition-all hover:scale-105 max-w-[120px] ${
+                        config[activePart.id as keyof CharacterConfig]?.color === color
+                          ? "border-primary ring-2 ring-primary ring-offset-2"
+                          : "border-border"
+                      }`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => handleColorChange(color)}
+                      disabled={isLoading}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <SaveButton 
