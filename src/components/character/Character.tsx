@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
@@ -24,10 +23,10 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     // Clone the SVG to avoid modifying the original
     const clonedSvg = svgElement.cloneNode(true) as SVGElement;
     
-    // Set proper viewBox and dimensions
+    // Set proper viewBox and dimensions to fill container
     clonedSvg.setAttribute('viewBox', '0 0 340 341');
-    clonedSvg.setAttribute('width', '160');
-    clonedSvg.setAttribute('height', '160');
+    clonedSvg.setAttribute('width', '100%');
+    clonedSvg.setAttribute('height', '100%');
     clonedSvg.classList.add('character-svg');
 
     // Get all possible elements that could be part of the character
@@ -135,13 +134,13 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
 
   if (isLoading) {
     return (
-      <div className="character-svg flex items-center justify-center" style={{ width: '160px', height: '160px' }}>
+      <div className="character-svg flex items-center justify-center w-full h-full">
         <div className="text-sm text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
-  return <div ref={svgRef} className="character-display" />;
+  return <div ref={svgRef} className="character-display w-full h-full" />;
 };
 
 export default Character;
