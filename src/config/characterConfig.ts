@@ -8,7 +8,7 @@ export const characterParts: CharacterPart[] = [
   { id: "nose", label: "Nose", options: 11, defaultColor: "#D49677" },
   { id: "mouth", label: "Mouth", options: 17, defaultColor: "#8B4B7A" },
   { id: "face", label: "Face", options: 9, defaultColor: "#FADFC9" },
-  { id: "shirt", label: "Shirt", options: 10, defaultColor: "#342059" }
+  { id: "shirt", label: "Shirt", options: 5, defaultColor: "#342059" }
 ];
 
 export const colorPalettes = {
