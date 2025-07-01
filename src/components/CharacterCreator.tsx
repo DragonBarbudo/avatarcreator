@@ -1,98 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { Icon } from "@iconify/react";
-import { CharacterConfig, CharacterPart, PostMessagePayload } from "../types/character";
+
+import React, { useState } from "react";
+import { CharacterConfig, CharacterPart } from "../types/character";
 import { characterParts, defaultConfig, colorPalettes } from "../config/characterConfig";
 import { Card, CardContent } from "./ui/card";
-import PartPreview from "./ui/PartPreview";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
-import Character from "./character/Character";
+import PartPreviewGrid from "./character/PartPreviewGrid";
+import SaveButton from "./character/SaveButton";
 import { useSvgExistence } from "../hooks/useSvgExistence";
+import { useConfigLoader } from "../hooks/useConfigLoader";
+import { useSaveCharacter } from "../hooks/useSaveCharacter";
 
 const CharacterCreator: React.FC = () => {
   const [config, setConfig] = useState<CharacterConfig>({...defaultConfig});
   const [activePart, setActivePart] = useState<CharacterPart>(characterParts[0]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loadingProgress, setLoadingProgress] = useState<number>(0);
-  const characterRef = useRef<HTMLDivElement>(null);
-  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Use the optimized hook for checking SVG existence
+  
+  const { isLoading, loadingProgress } = useConfigLoader();
+  const { saveCharacter, characterRef } = useSaveCharacter();
   const { existingStyles, isLoading: stylesLoading } = useSvgExistence(activePart.id, activePart.options);
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === "loadConfig" && event.data.config) {
-        try {
-          // Start loading state
-          setIsLoading(true);
-          setLoadingProgress(0);
-          
-          // Set up progress animation
-          let progress = 0;
-          loadingTimerRef.current = setInterval(() => {
-            progress += 5;
-            setLoadingProgress(Math.min(progress, 95)); // Cap at 95% until complete
-            
-            if (progress >= 100) {
-              clearInterval(loadingTimerRef.current as NodeJS.Timeout);
-              loadingTimerRef.current = null;
-            }
-          }, 100);
-          
-          // Ensure loading stays visible for at least 2 seconds
-          setTimeout(() => {
-            // Apply the configuration
-            setConfig(event.data.config);
-            
-            // Complete loading after 2 seconds
-            setTimeout(() => {
-              setLoadingProgress(100);
-              setTimeout(() => {
-                setIsLoading(false);
-                toast.success("Configuración cargada");
-              }, 200);
-            }, 100);
-            
-            if (loadingTimerRef.current) {
-              clearInterval(loadingTimerRef.current);
-              loadingTimerRef.current = null;
-            }
-          }, 2000);
-          
-        } catch (error) {
-          console.error("Error al cargar la configuración:", error);
-          setIsLoading(false);
-          toast.error("Error al cargar la configuración");
-          
-          if (loadingTimerRef.current) {
-            clearInterval(loadingTimerRef.current);
-            loadingTimerRef.current = null;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => {
-      window.removeEventListener("message", handleMessage);
-      if (loadingTimerRef.current) {
-        clearInterval(loadingTimerRef.current);
-      }
-    };
-  }, []);
 
   const handleStyleChange = (newStyle: number) => {
     if (activePart.id === 'hair') {
-      // For hair, update front style and automatically sync back style
       setConfig({
         ...config,
         hair: {
           ...config.hair,
           frontStyle: newStyle,
-          backStyle: newStyle, // Automatically match back hair to front hair
+          backStyle: newStyle,
         },
       });
     } else {
@@ -116,133 +51,8 @@ const CharacterCreator: React.FC = () => {
     });
   };
 
-  const saveCharacter = async () => {
-    if (!characterRef.current) return;
-
-    try {
-      const svgElement = characterRef.current.querySelector("svg");
-      if (!svgElement) throw new Error("SVG element not found");
-
-      const clonedSvg = svgElement.cloneNode(true) as SVGElement;
-      
-      const svgData = new XMLSerializer().serializeToString(clonedSvg);
-      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-      
-      const size = 300;
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("Could not create canvas context");
-
-      const img = new Image();
-      img.src = URL.createObjectURL(svgBlob);
-      
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      const svgSize = 160;
-      const scale = Math.min(size / svgSize, size / svgSize);
-      const offsetX = (size - (svgSize * scale)) / 2;
-      const offsetY = (size - (svgSize * scale)) / 2;
-      
-      ctx.drawImage(img, offsetX, offsetY, svgSize * scale, svgSize * scale);
-      
-      const pngDataUrl = canvas.toDataURL("image/png");
-      
-      const payload: PostMessagePayload = {
-        type: "save",
-        config,
-        imageData: pngDataUrl,
-      };
-      
-      window.parent.postMessage(payload, "*");
-      toast.success("¡Avatar actualizado!");
-    } catch (error) {
-      console.error("Error saving character:", error);
-      toast.error("Error al guardar avatar. Intenta de nuevo.");
-    }
-  };
-
-  const renderPartPreviews = () => {
-    if (stylesLoading) {
-      return (
-        <div className="grid grid-cols-4 gap-0.5">
-          {Array.from({ length: Math.min(activePart.options, 8) }).map((_, i) => (
-            <div key={i} className="aspect-square rounded-lg border animate-pulse bg-secondary/50" />
-          ))}
-        </div>
-      );
-    }
-
-    const currentPart = activePart;
-    const previews = [];
-    
-    // Only render previews for styles that actually exist
-    for (let i = 0; i < currentPart.options; i++) {
-      const styleId = i + 1;
-      const styleKey = `${currentPart.id}-${styleId}`;
-      
-      // Skip if the SVG file doesn't exist
-      if (!existingStyles[styleKey]) {
-        continue;
-      }
-      
-      let previewConfig;
-      
-      if (currentPart.id === 'hair') {
-        previewConfig = {
-          ...config,
-          hair: {
-            ...config.hair,
-            frontStyle: i,
-            backStyle: i, // Automatically match back hair
-          }
-        };
-      } else {
-        previewConfig = {
-          ...config,
-          [currentPart.id]: {
-            ...config[currentPart.id as keyof CharacterConfig],
-            style: i,
-          }
-        };
-      }
-      
-      // Get current style value properly for comparison
-      const currentPartConfig = config[currentPart.id as keyof CharacterConfig];
-      let currentStyle = 0;
-      
-      if (currentPart.id === 'hair') {
-        currentStyle = config.hair.frontStyle;
-      } else if ('style' in currentPartConfig) {
-        currentStyle = currentPartConfig.style;
-      }
-      
-      previews.push(
-        <PartPreview
-          key={i}
-          label={`Style ${i + 1}`}
-          style={i}
-          color={currentPartConfig.color}
-          isSelected={currentStyle === i}
-          onClick={() => handleStyleChange(i)}
-        >
-          <Character config={previewConfig} />
-        </PartPreview>
-      );
-    }
-    
-    return (
-      <div className="grid grid-cols-4 gap-0.5">
-        {previews}
-      </div>
-    );
+  const handleSaveCharacter = () => {
+    saveCharacter(config);
   };
 
   const getCurrentColorPalette = () => {
@@ -277,17 +87,19 @@ const CharacterCreator: React.FC = () => {
             />
 
             <div className="flex-1 overflow-y-auto">
-              {renderPartPreviews()}
+              <PartPreviewGrid
+                activePart={activePart}
+                config={config}
+                existingStyles={existingStyles}
+                stylesLoading={stylesLoading}
+                onStyleChange={handleStyleChange}
+              />
             </div>
 
-            <button 
-              onClick={saveCharacter}
-              disabled={isLoading} 
-              className="absolute top-2 right-2 save-button"
-            >
-              <Icon icon="mingcute:check-2-fill" width="16" />
-              <span className="text-xs">Guardar</span>
-            </button>
+            <SaveButton 
+              onSave={handleSaveCharacter}
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </CardContent>
