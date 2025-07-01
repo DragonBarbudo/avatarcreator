@@ -120,10 +120,15 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
         }
         
         // Apply color to colorable paths within the element
-        const colorablePaths = element.querySelectorAll('.colorable, path.colorable');
+        const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
         colorablePaths.forEach(path => {
           (path as SVGElement).setAttribute('fill', color);
         });
+        
+        // Also apply color directly to the element if it's a path
+        if (element.tagName === 'path') {
+          (element as SVGElement).setAttribute('fill', color);
+        }
       }
     });
 
