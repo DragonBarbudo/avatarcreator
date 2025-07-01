@@ -16,7 +16,7 @@ const CharacterPreview: React.FC<CharacterPreviewProps> = ({
   loadingProgress 
 }) => {
   return (
-    <div className="character-display bg-secondary/30 rounded-lg p-2 relative">
+    <div className="character-display bg-secondary/30 rounded-lg p-2 relative max-h-[220px]">
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 z-10 rounded-lg">
           <div className="text-primary font-medium mb-2">Cargando avatar...</div>
