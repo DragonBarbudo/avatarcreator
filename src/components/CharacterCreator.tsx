@@ -88,15 +88,6 @@ const CharacterCreator: React.FC = () => {
               isLoading={isLoading}
             />
             
-            {activePart.id === 'colors' ? (
-              <ColorPalette 
-                colors={getCurrentColorPalette()}
-                selectedColor={config[activePart.id as keyof CharacterConfig]?.color || colorPalettes.colors[0]}
-                onColorChange={handleColorChange}
-                isLoading={isLoading}
-              />
-            ) : null}
-
             <div className="flex-1 overflow-y-auto">
               {activePart.id !== 'colors' ? (
                 <PartPreviewGrid
