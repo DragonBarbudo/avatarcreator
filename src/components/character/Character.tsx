@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { CharacterConfig } from "../../types/character";
 import { useAvatarSvg } from "../../hooks/useAvatarSvg";
-import { darkenColor } from "../../utils/colorUtils";
 
 interface CharacterProps {
   config: CharacterConfig;
@@ -135,22 +134,19 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
         
         // Apply colors using CSS classes for changeable colors or direct fill for others
         if (partType === 'fhair' || partType === 'bhair') {
-          // Update hair color and stroke using CSS
-          const darkHairColor = darkenColor(config.hair.color, 25);
+          // Update hair color using CSS
           const style = document.createElement('style');
-          style.textContent = `.fill-hair { fill: ${config.hair.color}; stroke: ${darkHairColor}; }`;
+          style.textContent = `.fill-hair { fill: ${config.hair.color}; }`;
           clonedSvg.appendChild(style);
         } else if (partType === 'face') {
-          // Update face color and stroke using CSS
-          const darkFaceColor = darkenColor(config.face.color, 15);
+          // Update face color using CSS
           const style = document.createElement('style');
-          style.textContent = `.fill-face { fill: ${config.face.color}; stroke: ${darkFaceColor}; }`;
+          style.textContent = `.fill-face { fill: ${config.face.color}; }`;
           clonedSvg.appendChild(style);
         } else if (partType === 'shirt') {
-          // Update shirt color and stroke using CSS
-          const darkShirtColor = darkenColor(config.shirt.color, 25);
+          // Update shirt color using CSS
           const style = document.createElement('style');
-          style.textContent = `.fill-shirt { fill: ${config.shirt.color}; stroke: ${darkShirtColor}; }`;
+          style.textContent = `.fill-shirt { fill: ${config.shirt.color}; }`;
           clonedSvg.appendChild(style);
         } else {
           // For non-changeable colors, apply directly to paths
