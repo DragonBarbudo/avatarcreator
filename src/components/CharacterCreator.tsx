@@ -8,7 +8,6 @@ import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
 import PartPreviewGrid from "./character/PartPreviewGrid";
 import SaveButton from "./character/SaveButton";
-import { useSvgExistence } from "../hooks/useSvgExistence";
 import { useConfigLoader } from "../hooks/useConfigLoader";
 import { useSaveCharacter } from "../hooks/useSaveCharacter";
 
@@ -18,7 +17,6 @@ const CharacterCreator: React.FC = () => {
   
   const { isLoading, loadingProgress } = useConfigLoader();
   const { saveCharacter, characterRef } = useSaveCharacter();
-  const { existingStyles, isLoading: stylesLoading } = useSvgExistence(activePart.id, activePart.options);
 
   const handleStyleChange = (newStyle: number) => {
     if (activePart.id === 'hair') {
@@ -90,8 +88,6 @@ const CharacterCreator: React.FC = () => {
               <PartPreviewGrid
                 activePart={activePart}
                 config={config}
-                existingStyles={existingStyles}
-                stylesLoading={stylesLoading}
                 onStyleChange={handleStyleChange}
               />
             </div>

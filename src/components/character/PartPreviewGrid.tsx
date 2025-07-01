@@ -7,41 +7,19 @@ import Character from "./Character";
 interface PartPreviewGridProps {
   activePart: CharacterPart;
   config: CharacterConfig;
-  existingStyles: {[key: string]: boolean};
-  stylesLoading: boolean;
   onStyleChange: (newStyle: number) => void;
 }
 
 const PartPreviewGrid: React.FC<PartPreviewGridProps> = ({
   activePart,
   config,
-  existingStyles,
-  stylesLoading,
   onStyleChange
 }) => {
-  if (stylesLoading) {
-    return (
-      <div className="grid grid-cols-4 gap-0.5">
-        {Array.from({ length: Math.min(activePart.options, 8) }).map((_, i) => (
-          <div key={i} className="aspect-square rounded-lg border animate-pulse bg-secondary/50" />
-        ))}
-      </div>
-    );
-  }
-
   const currentPart = activePart;
   const previews = [];
   
-  // Only render previews for styles that actually exist
+  // Render previews for all available styles
   for (let i = 0; i < currentPart.options; i++) {
-    const styleId = i + 1;
-    const styleKey = `${currentPart.id}-${styleId}`;
-    
-    // Skip if the SVG file doesn't exist
-    if (!existingStyles[styleKey]) {
-      continue;
-    }
-    
     let previewConfig;
     
     if (currentPart.id === 'hair') {
