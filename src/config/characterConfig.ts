@@ -16,17 +16,44 @@ export const changeableColors = {
   hair: {
     label: "Color del Cabello",
     defaultColor: "#31A4C3",
-    palette: ["#31A4C3", "#4d1aa8", "#03bdea", "#ef7e7e", "#0D0817", "#8a5648", "#dcbe90", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57", "#FF9FF3", "#54A0FF", "#5F27CD"]
+    palette: [
+      // Blues
+      "#31A4C3", "#03bdea", "#45B7D1", "#54A0FF", "#4ECDC4",
+      // Purples
+      "#4d1aa8", "#5F27CD", "#FF9FF3", "#8E45A5",
+      // Browns/Natural
+      "#0D0817", "#8a5648", "#dcbe90", "#B87A3C",
+      // Reds/Pinks
+      "#ef7e7e", "#FF6B6B"
+    ]
   },
   face: {
     label: "Color de la Cara",
     defaultColor: "#FBC59D",
-    palette: ["#FBC59D", "#FADFC9", "#F4C8AB", "#E5B091", "#D49677", "#C68B59", "#B87A3C", "#A0522D", "#8B4513", "#CD853F", "#DEB887", "#F5DEB3"]
+    palette: [
+      // Light skin tones
+      "#FBC59D", "#FADFC9", "#F5DEB3", "#DEB887",
+      // Medium skin tones
+      "#F4C8AB", "#E5B091", "#D49677", "#CD853F",
+      // Darker skin tones
+      "#C68B59", "#B87A3C", "#A0522D", "#8B4513"
+    ]
   },
   shirt: {
     label: "Color de la Ropa",
     defaultColor: "#8E45A5",
-    palette: ["#8E45A5", "#4d1aa8", "#03bdea", "#ef7e7e", "#342059", "#8a5648", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57", "#FF9FF3", "#54A0FF", "#5F27CD", "#10AC84", "#EE5A24"]
+    palette: [
+      // Purples
+      "#8E45A5", "#4d1aa8", "#5F27CD", "#342059",
+      // Blues
+      "#03bdea", "#45B7D1", "#54A0FF", "#4ECDC4",
+      // Greens
+      "#96CEB4", "#10AC84",
+      // Reds/Oranges
+      "#ef7e7e", "#FF6B6B", "#EE5A24", "#FECA57",
+      // Other colors
+      "#8a5648", "#FF9FF3"
+    ]
   }
 };
 
