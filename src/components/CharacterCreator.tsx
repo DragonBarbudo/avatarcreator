@@ -7,6 +7,7 @@ import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import ColorPalette from "./character/ColorPalette";
 import PartPreviewGrid from "./character/PartPreviewGrid";
+import ChangeableColorPickers from "./character/ChangeableColorPickers";
 import SaveButton from "./character/SaveButton";
 import { useConfigLoader } from "../hooks/useConfigLoader";
 import { useSaveCharacter } from "../hooks/useSaveCharacter";
@@ -45,6 +46,16 @@ const CharacterCreator: React.FC = () => {
       [activePart.id]: {
         ...config[activePart.id as keyof CharacterConfig],
         color: newColor,
+      },
+    });
+  };
+
+  const handleChangeableColorChange = (partId: string, color: string) => {
+    setConfig({
+      ...config,
+      [partId]: {
+        ...config[partId as keyof CharacterConfig],
+        color: color,
       },
     });
   };
@@ -94,21 +105,11 @@ const CharacterCreator: React.FC = () => {
                   onStyleChange={handleStyleChange}
                 />
               ) : (
-                <div className="grid grid-cols-4 gap-2 max-w-[480px] mx-auto">
-                  {getCurrentColorPalette().map((color, index) => (
-                    <button
-                      key={index}
-                      className={`aspect-square rounded-lg border-2 transition-all hover:scale-105 max-w-[120px] ${
-                        config[activePart.id as keyof CharacterConfig]?.color === color
-                          ? "border-primary ring-2 ring-primary ring-offset-2"
-                          : "border-border"
-                      }`}
-                      style={{ backgroundColor: color }}
-                      onClick={() => handleColorChange(color)}
-                      disabled={isLoading}
-                    />
-                  ))}
-                </div>
+                <ChangeableColorPickers
+                  config={config}
+                  onColorChange={handleChangeableColorChange}
+                  isLoading={isLoading}
+                />
               )}
             </div>
 
