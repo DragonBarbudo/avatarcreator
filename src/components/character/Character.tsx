@@ -29,6 +29,19 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
     clonedSvg.setAttribute('height', '100%');
     clonedSvg.classList.add('character-svg');
 
+    // Initialize changeable color classes based on fill colors
+    const allPaths = clonedSvg.querySelectorAll('path, g');
+    allPaths.forEach(element => {
+      const fill = element.getAttribute('fill');
+      if (fill === '#31A4C3') {
+        element.classList.add('fill-hair');
+      } else if (fill === '#FBC59D') {
+        element.classList.add('fill-face');
+      } else if (fill === '#8E45A5') {
+        element.classList.add('fill-shirt');
+      }
+    });
+
     // Get all possible elements that could be part of the character
     const allPossibleElements = clonedSvg.querySelectorAll('[id*="eyes-"], [id*="fhair-"], [id*="bhair-"], [id*="brows-"], [id*="nose-"], [id*="mouth-"], [id*="face-"], [id*="shirt-"]');
     
@@ -119,15 +132,33 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             break;
         }
         
-        // Apply color to colorable paths within the element
-        const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
-        colorablePaths.forEach(path => {
-          (path as SVGElement).setAttribute('fill', color);
-        });
-        
-        // Also apply color directly to the element if it's a path
-        if (element.tagName === 'path') {
-          (element as SVGElement).setAttribute('fill', color);
+        // Apply colors using CSS classes for changeable colors or direct fill for others
+        if (partType === 'fhair' || partType === 'bhair') {
+          // Update hair color using CSS
+          const style = document.createElement('style');
+          style.textContent = `.fill-hair { fill: ${config.hair.color}; }`;
+          clonedSvg.appendChild(style);
+        } else if (partType === 'face') {
+          // Update face color using CSS
+          const style = document.createElement('style');
+          style.textContent = `.fill-face { fill: ${config.face.color}; }`;
+          clonedSvg.appendChild(style);
+        } else if (partType === 'shirt') {
+          // Update shirt color using CSS
+          const style = document.createElement('style');
+          style.textContent = `.fill-shirt { fill: ${config.shirt.color}; }`;
+          clonedSvg.appendChild(style);
+        } else {
+          // For non-changeable colors, apply directly to paths
+          const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
+          colorablePaths.forEach(path => {
+            (path as SVGElement).setAttribute('fill', color);
+          });
+          
+          // Also apply color directly to the element if it's a path
+          if (element.tagName === 'path') {
+            (element as SVGElement).setAttribute('fill', color);
+          }
         }
       }
     });
