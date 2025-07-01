@@ -149,15 +149,22 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
           style.textContent = `.fill-shirt { fill: ${config.shirt.color}; }`;
           clonedSvg.appendChild(style);
         } else {
-          // For non-changeable colors, apply directly to paths
+          // For non-changeable colors, apply only to fill attributes, not stroke
           const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
           colorablePaths.forEach(path => {
-            (path as SVGElement).setAttribute('fill', color);
+            const svgPath = path as SVGElement;
+            // Only set fill, preserve existing stroke
+            if (svgPath.getAttribute('fill') !== 'none') {
+              svgPath.setAttribute('fill', color);
+            }
           });
           
-          // Also apply color directly to the element if it's a path
+          // Also apply color directly to the element if it's a path, but only to fill
           if (element.tagName === 'path') {
-            (element as SVGElement).setAttribute('fill', color);
+            const svgElement = element as SVGElement;
+            if (svgElement.getAttribute('fill') !== 'none') {
+              svgElement.setAttribute('fill', color);
+            }
           }
         }
       }
