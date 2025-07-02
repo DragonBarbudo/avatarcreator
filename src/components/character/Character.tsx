@@ -132,24 +132,24 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             break;
         }
         
-        // Apply colors using CSS classes for changeable colors or direct fill for others
+        // Apply colors only to fill attributes, never to stroke
         if (partType === 'fhair' || partType === 'bhair') {
-          // Update hair color using CSS
+          // Update hair color using CSS - only fill, not stroke
           const style = document.createElement('style');
-          style.textContent = `.fill-hair { fill: ${config.hair.color}; }`;
+          style.textContent = `.fill-hair { fill: ${config.hair.color} !important; stroke: inherit !important; }`;
           clonedSvg.appendChild(style);
         } else if (partType === 'face') {
-          // Update face color using CSS
+          // Update face color using CSS - only fill, not stroke
           const style = document.createElement('style');
-          style.textContent = `.fill-face { fill: ${config.face.color}; }`;
+          style.textContent = `.fill-face { fill: ${config.face.color} !important; stroke: inherit !important; }`;
           clonedSvg.appendChild(style);
         } else if (partType === 'shirt') {
-          // Update shirt color using CSS
+          // Update shirt color using CSS - only fill, not stroke
           const style = document.createElement('style');
-          style.textContent = `.fill-shirt { fill: ${config.shirt.color}; }`;
+          style.textContent = `.fill-shirt { fill: ${config.shirt.color} !important; stroke: inherit !important; }`;
           clonedSvg.appendChild(style);
         } else {
-          // For non-changeable colors, apply only to fill attributes, not stroke
+          // For non-changeable colors, apply only to fill attributes, never stroke
           const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
           colorablePaths.forEach(path => {
             const svgPath = path as SVGElement;
