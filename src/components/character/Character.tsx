@@ -119,7 +119,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             color = config.brows.color;
             break;
           case 'nose':
-            color = config.nose.color;
+            // Skip color application for nose to preserve all original attributes
             break;
           case 'mouth':
             color = config.mouth.color;
