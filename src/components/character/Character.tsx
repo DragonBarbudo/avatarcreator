@@ -119,8 +119,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             color = config.brows.color;
             break;
           case 'nose':
-            // Do not apply any color to nose to preserve original stroke
-            color = '';
+            color = config.nose.color;
             break;
           case 'mouth':
             color = config.mouth.color;
@@ -149,13 +148,14 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
           const style = document.createElement('style');
           style.textContent = `.fill-shirt { fill: ${config.shirt.color} !important; stroke: inherit !important; }`;
           clonedSvg.appendChild(style);
-        } else if (color) {
-          // For non-changeable colors, apply only to fill attributes, never stroke
+        } else {
+          // For non-changeable colors, apply only to fill attributes, NEVER modify stroke
           const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
           colorablePaths.forEach(path => {
             const svgPath = path as SVGElement;
-            // Only set fill, preserve existing stroke
-            if (svgPath.getAttribute('fill') !== 'none') {
+            // Only set fill if it exists and isn't 'none', never touch stroke
+            const currentFill = svgPath.getAttribute('fill');
+            if (currentFill && currentFill !== 'none') {
               svgPath.setAttribute('fill', color);
             }
           });
@@ -163,7 +163,8 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
           // Also apply color directly to the element if it's a path, but only to fill
           if (element.tagName === 'path') {
             const svgElement = element as SVGElement;
-            if (svgElement.getAttribute('fill') !== 'none') {
+            const currentFill = svgElement.getAttribute('fill');
+            if (currentFill && currentFill !== 'none') {
               svgElement.setAttribute('fill', color);
             }
           }
