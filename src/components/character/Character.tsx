@@ -119,7 +119,8 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
             color = config.brows.color;
             break;
           case 'nose':
-            color = config.nose.color;
+            // Do not apply any color to nose to preserve original stroke
+            color = '';
             break;
           case 'mouth':
             color = config.mouth.color;
@@ -148,7 +149,7 @@ const Character: React.FC<CharacterProps> = ({ config }) => {
           const style = document.createElement('style');
           style.textContent = `.fill-shirt { fill: ${config.shirt.color} !important; stroke: inherit !important; }`;
           clonedSvg.appendChild(style);
-        } else {
+        } else if (color) {
           // For non-changeable colors, apply only to fill attributes, never stroke
           const colorablePaths = element.querySelectorAll('.colorable, path.colorable, path');
           colorablePaths.forEach(path => {
