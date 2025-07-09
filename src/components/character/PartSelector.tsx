@@ -38,7 +38,8 @@ const PartSelector: React.FC<PartSelectorProps> = ({
   isLoading
 }) => {
   return (
-    <div className="flex items-center justify-center gap-2 p-2 rounded-lg bg-secondary/30 overflow-x-auto">
+    <div className="flex items-center flex-wrap justify-center gap-2 p-2 rounded-lg bg-secondary/30 overflow-x-auto">
+      
       {characterParts.map((part) => (
         <button
           key={part.id}

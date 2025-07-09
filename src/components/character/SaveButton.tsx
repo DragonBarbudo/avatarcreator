@@ -12,10 +12,10 @@ const SaveButton: React.FC<SaveButtonProps> = ({ onSave, isLoading }) => {
     <button 
       onClick={onSave}
       disabled={isLoading} 
-      className="absolute top-2 right-2 save-button"
+      className=" top-2 right-2 save-button"
     >
       <Icon icon="mingcute:check-2-fill" width="16" />
-      <span className="text-xs">Guardar</span>
+      <span className="text-md">Actualizar avatar</span>
     </button>
   );
 };

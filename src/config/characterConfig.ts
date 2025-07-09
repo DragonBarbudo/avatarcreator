@@ -1,32 +1,51 @@
-import { CharacterConfig, CharacterPart } from "../types/character";
-
-export const characterParts: CharacterPart[] = [
-  { id: "eyes", label: "Eyes", options: 9, defaultColor: "#2F284C" },
-  { id: "hair", label: "Hair", options: 23, defaultColor: "#482B79" },
-  { id: "brows", label: "Eyebrows", options: 10, defaultColor: "#3A366F" },
-  { id: "nose", label: "Nose", options: 11, defaultColor: "#D49677" },
-  { id: "mouth", label: "Mouth", options: 17, defaultColor: "#8B4B7A" },
-  { id: "face", label: "Face", options: 9, defaultColor: "#FADFC9" },
-  { id: "shirt", label: "Shirt", options: 9, defaultColor: "#342059" },
-  { id: "colors", label: "Colors", options: 6, defaultColor: "#2F284C" }
-];
+import { CharacterConfig } from "../types/character";
 
 // Changeable colors configuration for easy modification
 export const changeableColors = {
   hair: {
-    label: "Color del Cabello",
-    defaultColor: "#31A4C3",
-    palette: ["#31A4C3", "#4d1aa8", "#03bdea", "#ef7e7e", "#0D0817", "#8a5648", "#dcbe90", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57", "#FF9FF3", "#54A0FF", "#5F27CD"]
+    icon: "mingcute:hair-2-fill",
+    label: "Cabello",
+    defaultColor: "#8a5648", // Brown
+    palette: [
+      // Cafés
+      "#2C1A1A", // Casi negro
+      "#4A2C2C", // Oscuro
+      "#6F4E37", // Medio
+      "#8B5A2B", // Claro
+      // Pelirojo
+      "#B85C38",
+      // Rubio
+      "#F5DEB3",
+      // Canoso
+      "#A9A9A9", // Gris
+      "#F5F5DC", // Blanco
+      // Tonos de fantasía poco saturados
+      "#87CEEB", // Azul cielo
+      "#90EE90", // Verde claro
+      "#DDA0DD", // Ciruela
+    ]
   },
   face: {
-    label: "Color de la Cara",
-    defaultColor: "#FBC59D",
-    palette: ["#FBC59D", "#FADFC9", "#F4C8AB", "#E5B091", "#D49677", "#C68B59", "#B87A3C", "#A0522D", "#8B4513", "#CD853F", "#DEB887", "#F5DEB3"]
+    icon: "mingcute:face-fill",
+    label: "Piel",
+    defaultColor: "#FADFC9", // Lightest skin tone
+    palette: [
+      // Tonos de piel (oscuro a blanco)
+      "#6F4E37", "#8B4513", "#A0522D", "#B87A3C", "#C68B59", "#CD853F", "#D49677", "#DEB887", "#E5B091", "#F4C8AB", "#F5DEB3", "#FBC59D", "#FADFC9",
+      // Tonos rosados
+      "#FFC0CB", "#FFB6C1", "#FFDAB9",
+      // Tonos amarillos
+      "#FFFACD", "#FAFAD2", "#FFFFE0",
+    ]
   },
   shirt: {
-    label: "Color de la Ropa",
-    defaultColor: "#8E45A5",
-    palette: ["#8E45A5", "#4d1aa8", "#03bdea", "#ef7e7e", "#342059", "#8a5648", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57", "#FF9FF3", "#54A0FF", "#5F27CD", "#10AC84", "#EE5A24"]
+    icon: "mingcute:t-shirt-fill",
+    label: "Ropa",
+    defaultColor: "#54A0FF", // Blue
+    palette: [
+      // Colores variados
+      "#EE5A24", "#FF6B6B", "#ef7e7e", "#FF9FF3", "#8E45A5", "#5F27CD", "#4d1aa8", "#54A0FF", "#03bdea", "#45B7D1", "#342059", "#10AC84", "#4ECDC4", "#96CEB4", "#FECA57",
+    ]
   }
 };
 

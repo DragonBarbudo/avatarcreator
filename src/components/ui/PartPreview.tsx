@@ -20,11 +20,11 @@ const PartPreview = ({
     <button 
       onClick={onClick} 
       className={cn(
-        "aspect-square  rounded-lg border transition-all",
-        isSelected ? "border-primary bg-accent" : "border-border hover:border-primary/50"
+        "aspect-square rounded-sm  transition-all",
+        isSelected ? "bg-primary" : " hover:border-primary/50"
       )}
     >
-      <div className="w-full h-full flex items-center justify-center bg-secondary/30 rounded-lg overflow-hidden">
+      <div className="w-full h-full flex items-center justify-center bg-primary/10 rounded-sm overflow-hidden">
         <div className="w-full h-full flex items-center justify-center transform scale-90">
           {children}
         </div>
