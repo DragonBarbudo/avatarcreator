@@ -1,47 +1,45 @@
-import React from "react";
-import { CharacterConfig } from "../../types/character";
-import { changeableColors } from "../../config/characterConfig";
-import ColorPicker from "../ui/ColorPicker";
-import { Icon } from "@iconify/react";
-
+import React from 'react';
+import { CharacterConfig } from '../../types/character';
+import ColorListSlider from '../ui/HueSlider'; // The component is renamed in spirit, but the file is the same
+import { changeableColors } from '../../config/characterConfig';
+import { Label } from '../ui/label';
 
 interface ChangeableColorPickersProps {
   config: CharacterConfig;
   onColorChange: (partId: string, color: string) => void;
 }
 
-const ChangeableColorPickers: React.FC<ChangeableColorPickersProps> = ({ config, onColorChange }) => {
-
-  // Helper function to safely get the current color of a part
-  const getCurrentColor = (partId: keyof typeof changeableColors): string => {
-    const partConfig = config[partId];
-    if (partConfig && 'color' in partConfig) {
-      return partConfig.color;
-    }
-    return ''; // Return a fallback color or empty string if no color is found
-  };
+const ChangeableColorPickers: React.FC<ChangeableColorPickersProps> = ({
+  config,
+  onColorChange,
+}) => {
+  const parts = Object.keys(changeableColors) as (keyof typeof changeableColors)[];
 
   return (
-    <div className="space-y-4">
-      {Object.entries(changeableColors).map(([partId, { icon, label, palette }]) => {
-        const key = partId as keyof typeof changeableColors;
-        const selectedColor = getCurrentColor(key);
+    <div className="space-y-4 p-4">
+      <h3 className="text-lg font-medium text-foreground">Colors</h3>
+      <div className="space-y-6">
+        {parts.map((partId) => {
+          const partData = changeableColors[partId];
+          const partConfig = config[partId];
+          if (!partConfig || typeof partConfig === 'string' || !('color' in partConfig)) return null;
 
-        return (
-          <div key={partId} className="grid grid-cols-3 items-center gap-4">
-            <div>
-              <Icon icon={icon} width="100" />
-            </div>
-            <div className="col-span-2">
-              <ColorPicker
-                colors={palette}
-                selectedColor={selectedColor}
-                onChange={(color) => onColorChange(partId, color)}
+          const color = partConfig.color;
+
+          return (
+            <div key={partId} className="space-y-3">
+              <Label htmlFor={`slider-${partId}`} className="text-sm font-medium">
+                {partData.label}
+              </Label>
+              <ColorListSlider
+                colors={partData.colors}
+                value={color}
+                onChange={(newColor) => onColorChange(partId, newColor)}
               />
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

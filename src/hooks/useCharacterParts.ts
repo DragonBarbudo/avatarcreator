@@ -33,8 +33,7 @@ const useCharacterParts = () => {
           { id: "nose", label: "Nose", options: partCounts.nose || 0, defaultColor: "#D49677" },
           { id: "mouth", label: "Mouth", options: partCounts.mouth || 0, defaultColor: "#8B4B7A" },
           { id: "face", label: "Face", options: partCounts.face || 0, defaultColor: "#FADFC9" },
-          { id: "shirt", label: "Shirt", options: partCounts.shirt || 0, defaultColor: "#342059" },
-          { id: "colors", label: "Colors", options: 6, defaultColor: "#2F284C" }
+          { id: "shirt", label: "Shirt", options: partCounts.shirt || 0, defaultColor: "#342059" }
         ];
 
         setCharacterParts(newCharacterParts);

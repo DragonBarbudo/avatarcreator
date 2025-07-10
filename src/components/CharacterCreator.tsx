@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { CharacterConfig, CharacterPart } from "../types/character";
-import { defaultConfig, changeableColors, colorPalettes } from "../config/characterConfig";
+import { defaultConfig, hairColors, faceColors, shirtColors } from "../config/characterConfig";
 import { Card, CardContent } from "./ui/card";
 import CharacterPreview from "./character/CharacterPreview";
 import PartSelector from "./character/PartSelector";
 import PartPreviewGrid from "./character/PartPreviewGrid";
-import ChangeableColorPickers from "./character/ChangeableColorPickers";
+
 import SaveButton from "./character/SaveButton";
 import { useConfigLoader } from "../hooks/useConfigLoader";
 import { useSaveCharacter } from "../hooks/useSaveCharacter";
@@ -82,36 +82,25 @@ const CharacterCreator: React.FC = () => {
   };
 
   const handleRandomize = () => {
-    const newConfig: CharacterConfig = { ...defaultConfig };
+    // Randomize styles and colors
+    const newConfig: CharacterConfig = { ...config };
 
+    // Randomize styles for all parts
     characterParts.forEach(part => {
-      if (part.id === 'colors') return; // Skip the 'colors' part as it's for changeable colors
-
+      if (part.id === 'colors') return;
       const randomStyle = Math.floor(Math.random() * part.options);
       if (part.id === 'hair') {
-        newConfig.hair = {
-          ...newConfig.hair,
-          frontStyle: randomStyle,
-          backStyle: randomStyle,
-        };
+        newConfig.hair.frontStyle = randomStyle;
+        newConfig.hair.backStyle = randomStyle;
       } else {
-        newConfig[part.id as keyof CharacterConfig] = {
-            ...(newConfig[part.id as keyof CharacterConfig] as any),
-            style: randomStyle,
-          };
-      }
-
-      // Randomize changeable colors if applicable
-      if (part.id in changeableColors) {
-        const palette = changeableColors[part.id as keyof typeof changeableColors].palette;
-        const randomColor = palette[Math.floor(Math.random() * palette.length)];
-        if (part.id === 'hair') {
-          newConfig.hair.color = randomColor;
-        } else {
-          (newConfig[part.id as keyof CharacterConfig] as any).color = randomColor;
-        }
+        (newConfig[part.id as keyof CharacterConfig] as any).style = randomStyle;
       }
     });
+
+    // Randomize colors from the new lists
+    newConfig.hair.color = hairColors[Math.floor(Math.random() * hairColors.length)];
+    newConfig.face.color = faceColors[Math.floor(Math.random() * faceColors.length)];
+    newConfig.shirt.color = shirtColors[Math.floor(Math.random() * shirtColors.length)];
 
     setConfig(newConfig);
   };
@@ -157,10 +146,6 @@ const CharacterCreator: React.FC = () => {
                   activePart={activePart}
                   config={config}
                   onStyleChange={handleStyleChange}
-                />
-              ) : activePart ? (
-                <ChangeableColorPickers
-                  config={config}
                   onColorChange={handleChangeableColorChange}
                 />
               ) : null}

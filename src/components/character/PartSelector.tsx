@@ -16,8 +16,7 @@ const partIcons: { [key: string]: React.ReactNode } = {
   nose: <Icon icon="mingcute:nose-fill" width="20" />,
   mouth: <Icon icon="mingcute:mouth-fill" width="20" />,
   face: <Icon icon="mingcute:face-fill" width="20" />,
-  shirt: <Icon icon="mingcute:t-shirt-fill" width="20" />,
-  colors: <Icon icon="mingcute:palette-fill" width="20" />
+  shirt: <Icon icon="mingcute:t-shirt-fill" width="20" />
 };
 
 const partLabels: { [key: string]: string } = {
@@ -27,8 +26,7 @@ const partLabels: { [key: string]: string } = {
   nose: "Nariz",
   mouth: "Boca",
   face: "Cara",
-  shirt: "Ropa",
-  colors: "Colores"
+  shirt: "Ropa"
 };
 
 const PartSelector: React.FC<PartSelectorProps> = ({ 

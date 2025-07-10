@@ -1,71 +1,44 @@
 import { CharacterConfig } from "../types/character";
 
+// Define the color lists for the sliders
+export const hairColors = [
+  "#2C1A1A", "#4A2C2C", "#6F4E37", "#8B5A2B", "#B85C38", "#F5DEB3", "#A9A9A9",
+  "#F5F5DC", "#87CEEB", "#90EE90", "#DDA0DD", "#FF69B4", "#DB7093",
+];
+export const faceColors = [
+  "#6F4E37", "#8B4513", "#A0522D", "#B87A3C", "#C68B59", "#CD853F", "#D49677",
+  "#DEB887", "#E5B091", "#F4C8AB", "#F5DEB3", "#FBC59D", "#FADFC9",
+];
+export const shirtColors = [
+  "#FFFFFF", "#E0E0E0", "#C0C0C0", "#A0A0A0", "#808080", "#606060", "#404040",
+  "#202020", "#000000", "#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF",
+  "#0000FF", "#8B00FF", "#FF00FF", "#EE5A24", "#FF6B6B", "#FF9FF3", "#8E45A5",
+  "#5F27CD", "#54A0FF", "#10AC84", "#FECA57",
+];
+
 // Changeable colors configuration for easy modification
 export const changeableColors = {
   hair: {
-    icon: "mingcute:hair-2-fill",
     label: "Cabello",
-    defaultColor: "#8a5648", // Brown
-    palette: [
-      // Cafés
-      "#2C1A1A", // Casi negro
-      "#4A2C2C", // Oscuro
-      "#6F4E37", // Medio
-      "#8B5A2B", // Claro
-      // Pelirojo
-      "#B85C38",
-      // Rubio
-      "#F5DEB3",
-      // Canoso
-      "#A9A9A9", // Gris
-      "#F5F5DC", // Blanco
-      // Tonos de fantasía poco saturados
-      "#87CEEB", // Azul cielo
-      "#90EE90", // Verde claro
-      "#DDA0DD", // Ciruela
-    ]
+    colors: hairColors,
   },
   face: {
-    icon: "mingcute:face-fill",
     label: "Piel",
-    defaultColor: "#FADFC9", // Lightest skin tone
-    palette: [
-      // Tonos de piel (oscuro a blanco)
-      "#6F4E37", "#8B4513", "#A0522D", "#B87A3C", "#C68B59", "#CD853F", "#D49677", "#DEB887", "#E5B091", "#F4C8AB", "#F5DEB3", "#FBC59D", "#FADFC9",
-      // Tonos rosados
-      "#FFC0CB", "#FFB6C1", "#FFDAB9",
-      // Tonos amarillos
-      "#FFFACD", "#FAFAD2", "#FFFFE0",
-    ]
+    colors: faceColors,
   },
   shirt: {
-    icon: "mingcute:t-shirt-fill",
     label: "Ropa",
-    defaultColor: "#54A0FF", // Blue
-    palette: [
-      // Colores variados
-      "#EE5A24", "#FF6B6B", "#ef7e7e", "#FF9FF3", "#8E45A5", "#5F27CD", "#4d1aa8", "#54A0FF", "#03bdea", "#45B7D1", "#342059", "#10AC84", "#4ECDC4", "#96CEB4", "#FECA57",
-    ]
-  }
-};
-
-export const colorPalettes = {
-  eyes: ["#2F284C", "#13387f", "#343537", "#49041b", "#553110"],
-  hair: changeableColors.hair.palette,
-  brows: ["#3A366F", "#8B4B7A", "#2F284C", "#553110", "#342059"],
-  nose: ["#D49677", "#FADFC9", "#F4C8AB", "#E5B091"],
-  mouth: ["#8B4B7A", "#ef7e7e", "#D49677", "#553110"],
-  face: changeableColors.face.palette,
-  shirt: changeableColors.shirt.palette,
-  colors: ["#2F284C", "#13387f", "#343537", "#49041b", "#553110", "#4d1aa8"]
+    colors: shirtColors,
+  },
 };
 
 export const defaultConfig: CharacterConfig = {
-  eyes: { style: 0, color: colorPalettes.eyes[0] },
-  hair: { frontStyle: 0, backStyle: 0, color: changeableColors.hair.defaultColor },
-  brows: { style: 0, color: colorPalettes.brows[0] },
-  nose: { style: 0, color: colorPalettes.nose[0] },
-  mouth: { style: 0, color: colorPalettes.mouth[0] },
-  face: { style: 0, color: changeableColors.face.defaultColor },
-  shirt: { style: 0, color: changeableColors.shirt.defaultColor }
+  eyes: { style: 0, color: "#2F284C" },
+  hair: { frontStyle: 0, backStyle: 0, color: hairColors[2] },
+  brows: { style: 0, color: "#3A366F" },
+  nose: { style: 0, color: "#D49677" },
+  mouth: { style: 0, color: "#8B4B7A" },
+  face: { style: 0, color: faceColors[12] },
+  shirt: { style: 0, color: shirtColors[15] },
 };
+
