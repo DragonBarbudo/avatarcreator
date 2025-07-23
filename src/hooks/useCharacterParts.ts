@@ -9,7 +9,7 @@ const useCharacterParts = () => {
   useEffect(() => {
     const fetchSvgAndParse = async () => {
       try {
-        const response = await fetch('/avatar.svg');
+        const response = await fetch(`${import.meta.env.BASE_URL}avatar.svg`);
         const svgText = await response.text();
         
         const parser = new DOMParser();
